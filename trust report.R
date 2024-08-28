@@ -54,3 +54,30 @@ dat <- populate_table(
   mitigator_lookup,
   nee_results
 )
+
+# attempt at scatter plot -------------------------------------------------
+
+# get the baseline data
+baseline <- historical_mitigators_data |> 
+  filter(fyear == 201920)
+
+baseline_falls_related_admissions <- baseline |> 
+  filter(strategy == "falls_related_admissions")
+
+# get the scheme inputs
+falls_related_admissions_inputs <- dat |> 
+  filter(mitigator_variable == "falls_related_admissions") 
+
+# cross-reference the baseline value and scheme inputs
+falls_related_admissions_combined_data <- left_join(
+  falls_related_admissions_inputs,
+  baseline_falls_related_admissions,
+  by = c("scheme_code" = "procode"))
+
+ggplot(falls_related_admissions_combined_data, aes(x = value_mid, y = rate)) +
+  geom_point() +
+  xlab("scheme inputs midpoint (% of baseline)") +
+  ylab("scheme baseline rate") +
+  ggtitle("scatter plot comparison of scheme baseline values and inputs for falls related admissions") +
+  geom_text_repel(aes(label = scheme_code), size = 4)
+
