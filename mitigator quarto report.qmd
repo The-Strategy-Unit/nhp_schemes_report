@@ -1,0 +1,95 @@
+---
+title: "mitigator report"
+format: 
+  html:
+    embed-resources: true
+    toc: true
+    code-fold: true
+    message: false
+    warning: false
+editor: visual
+---
+
+# Introduction
+
+## A bit about NHP and the model
+
+## The model parameters -- all parameters
+
+## The purpose of this report
+
+To allow the programme to assess the breadth, ambition, certainty and credibility of trust activity mitigator assumptions
+
+## Structure of the report
+
+# Methods and data sources
+
+## Describe the two dfs
+
+## Describe the NEE exercise
+
+## Mention the issue about different model horizons
+
+## Anything on standardisation / rescaling / annualising
+
+## Describe how we do each of the 6 assessments
+
+### Use of mitigator assumptions / mitigator coverage
+
+### Relative ambition (central estimate) -- compared to trust average
+
+### Relative certainty (P80 range) -- compared to trust average
+
+### Credibility given NEE (central estimate)
+
+### Credibility given baseline cross-section (central estimate)
+
+### Credibility given trust time series (central estimate)
+
+## How do we aggregate effects by Trust over mitigators and by mitigator over Trusts
+
+# Results
+
+## Names of trusts that have run the model to date and the date of the latest model run
+
+## Mitigator coverage
+
+## Relative ambition
+
+## Relative certainty
+
+## Credibility compared to NEE
+
+## Credibility given baseline cross-section
+
+## Credibility given trust time series
+
+# Discussion
+
+## Summary of key findings
+
+## Limitations / issues to note
+
+## Possible further work
+
+# Appendix - 1 page for each participating trust
+
+## Summary
+
+### How many parameter set compared to other participating trusts
+
+### More of less ambitious than other participating trusts (average over all mitigators)
+
+### More of less certain than other participating trusts (average over all mitigators)
+
+### More of less ambitious than NEE (average over all mitigators)
+
+### More or less ambitious given baseline (average over all mitigators)
+
+### More or less ambitious given historical trend (average over all mitigators)
+
+## Outlier parameters
+
+### Parameters that other trusts have set but they haven't
+
+### Parameter values that are more than 2 sds on any of the assessments above
