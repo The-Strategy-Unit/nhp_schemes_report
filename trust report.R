@@ -1,10 +1,16 @@
 # purpose is a report for the NHP on the general state of play re schemes'
 # inputs to the NHP D&C model
 
+
+# libraries ---------------------------------------------------------------
+
 library(dplyr)
 library(here)
 library(ggplot2)
 library(ggrepel)
+
+
+# loading data ------------------------------------------------------------
 
 # establish a connection to the board containing the data
 board <- pins::board_connect()
@@ -37,6 +43,8 @@ trust_code_lookup <- read.csv(
     "data",
     "nhp-scheme-lookup.csv"), 
   check.names = FALSE) 
+
+# wrangling to simple data frame ------------------------------------------
 
 # load the functions which are defined for the app developed by Data Science team
 # https://github.com/The-Strategy-Unit/nhp_inputs_report_app/blob/main/R/fct_tabulate.R
