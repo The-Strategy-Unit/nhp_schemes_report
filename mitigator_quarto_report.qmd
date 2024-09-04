@@ -1,0 +1,605 @@
+---
+title: "mitigator report"
+date: today
+format: 
+  html:
+    embed-resources: true
+    toc: true
+    #code-fold: true
+    message: false
+    warning: false
+    echo: false
+editor: visual
+---
+
+```{r libraries}
+library(dplyr)
+library(here)
+library(ggplot2)
+library(ggrepel)
+library(lubridate)
+library(stringr)
+library(tidyr)
+```
+
+```{r loading_data}
+# establish a connection to the board containing the data
+board <- pins::board_connect()
+
+# loading the historical data
+historical_mitigators_data <- pins::pin_read(
+  board, "thomas.jemmett/inputs_app_rates_data_v2-1")
+
+# loading the app inputs from pin
+nhp_tagged_runs_params <- pins::pin_read(
+  board, "matt.dray/nhp_tagged_runs_params")
+
+# loading the metadata from pin
+nhp_tagged_runs_meta <- pins::pin_read(
+  board, "matt.dray/nhp_tagged_runs_meta")
+
+# loading the NEE data
+nee_results <- readRDS(here("data","nee_table.Rds"))
+
+# loading the mitigator lookup
+mitigator_lookup <- read.csv(
+  here(
+    "data",
+    "mitigator-lookup.csv"), 
+  check.names = FALSE)
+
+# loading the trust code lookup
+trust_code_lookup <- read.csv(
+  here(
+    "data",
+    "nhp-scheme-lookup.csv"), 
+  check.names = FALSE) 
+```
+
+
+```{r wrangling}
+# load the functions which are defined for the app developed by Data Science team
+# https://github.com/The-Strategy-Unit/nhp_inputs_report_app/blob/main/R/fct_tabulate.R
+
+source("fct tabulate.R")
+
+# derive the cleaned data frame (same as that being used for Shiny app)
+extracted_params <- extract_params(nhp_tagged_runs_params, nhp_tagged_runs_meta)
+skeleton_table <- prepare_skeleton_table(extracted_params)
+
+# adjust the day case mitigator names for the lookup
+# in the extracted parameters
+extracted_params <- extracted_params |> 
+  dplyr::mutate(
+    strategy = dplyr::case_match(
+      strategy,
+      "bads_daycase" ~ "day_procedures_usually_dc",
+      "bads_daycase_occasional" ~ "day_procedures_occasionally_dc",
+      "bads_outpatients" ~ "day_procedures_usually_op",
+      "bads_outpatients_or_daycase" ~ "day_procedures_occasionally_op",
+      .default = strategy
+  )
+)
+
+# and the nee results
+nee_results <- nee_results |> 
+  dplyr::mutate(
+    param_name = dplyr::case_match(
+      param_name,
+      "bads_daycase" ~ "day_procedures_usually_dc",
+      "bads_daycase_occasional" ~ "day_procedures_occasionally_dc",
+      "bads_outpatients" ~ "day_procedures_usually_op",
+      "bads_outpatients_or_daycase" ~ "day_procedures_occasionally_op",
+      .default = param_name
+  )
+)
+
+dat <- populate_table(
+  skeleton_table,
+  extracted_params,
+  trust_code_lookup,
+  mitigator_lookup,
+  nee_results
+) |> 
+# divide nee results by 100 so as to standardise
+  mutate(across(nee_p10:nee_mean, ~ .x / 100)) 
+
+
+#get the baseline data
+baseline <- historical_mitigators_data |> 
+  filter(fyear == 201920,
+         procode %in% nhp_tagged_runs_meta$dataset)
+
+# cross-reference the baseline value and scheme inputs
+baseline_inputs_data <- left_join(baseline, dat,
+  by = c("procode" = "scheme_code",
+         "strategy" = "mitigator_variable"))
+```
+
+## Background
+
+The government has committed to building more than 40 new hospitals by 2030. The New Hospital Programme (NHP), a partnership between Department of Health and Social Care (DHSC) and NHS England (NHSE), aims to ensure that this new hospital infrastructure will meet the future needs of the population and that the required investment represents value for money.
+
+Estimating future activity levels represents a critical early step in the process of scaling and designing new hospital infrastructure. The Strategy Unit (SU) has developed a Demand and Capacity (D&C) model to support the NHP and its stakeholders to make robust and auditable assessments of activity that hospitals may need to accommodate in the future.
+
+## D&C model overview
+
+The NHP D&C model takes activity at a chosen baseline year and projects into the future how activity levels might change without further action (though, importantly, assuming that past actions are sustained and scaled in line with population changes). It also allows systems to make judgements about evidence-based activity mitigations and productivity improvements that they plan to achieve (e.g. to reduce activity, lower its intensity, or divert it). From that combination of inputs, set as ranges to reflect uncertainty, the model forecasts a distribution of likely future activity. From that activity forecast, capacity requirements can then be derived.
+
+The overall model logic is shown below (the elements in blue are currently live; the elements in orange are planned future refinements):
+
+![](images/model%20diagram.png)
+
+In developing the modelling approach for individual hospital schemes (as opposed to whole-programme average assumptions to drive e.g. the Programme Business Case), NHP has determined which input assumptions at the current time are best determined locally (following a systematic method, using a nationally determined structure- the NHP D&C model- and with constructive challenge) and which nationally. Assumptions are set nationally where there is little or no reason to believe that the factor is likely to operate differentially at a local level.
+
+This is set out below:
+
++-----------------------------+-------------------------------------------------+
+| Assumption                  | National / local                                |
++=============================+=================================================+
+| Demographic change          | National                                        |
++-----------------------------+-------------------------------------------------+
+| Age-specific health status  | National                                        |
++-----------------------------+-------------------------------------------------+
+| Non-demographic change      | National                                        |
++-----------------------------+-------------------------------------------------+
+| Activity mitigators         | Local                                           |
++-----------------------------+-------------------------------------------------+
+| Repatriation / expatriation | Local                                           |
++-----------------------------+-------------------------------------------------+
+| Waiting list adjustment     | Local                                           |
++-----------------------------+-------------------------------------------------+
+| *Inequalities adjustment*   | *Local (but requires national policy position)* |
++-----------------------------+-------------------------------------------------+
+
+: National and local assumptions
+
+## Purpose of this report
+
+The purpose of this report is to allow the NHP to assess the breadth, ambition, certainty and credibility of trusts' activity mitigator assumptions. These constitute the bulk of the local assumptions made by each trust during the model rollout / local elicitation exercises that have been conducted this year.
+
+## Structure of the report
+
+We consider lines of inquiry within this report as detailed in the below table. (Note that above NEE refers to the National Elicitation Exercise which was conducted in 2023 to ask subject matter experts their views on the likely reasonable ranges of change in the future for each of the mitigators in the model.)
+
++----------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------+
+| Line of inquiry                                    | Question                                                                                                                     |
++====================================================+==============================================================================================================================+
+| **Mitigator coverage**                             | What proportion of trusts have set each parameter?                                                                           |
++----------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------+
+| **Mitigator ambition**                             | Which mitigators are associated with the biggest relative and absolute reductions?                                           |
++----------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------+
+| **Mitigator certainty**                            | Which mitigators are associated with the greater level of certainty / uncertainty?                                           |
++----------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------+
+| **Mitigator credibility**                          | What is the strength of the relationship between trust parameter point estimates and those obtained from the NEE exercise?   |
+|                                                    |                                                                                                                              |
+| **(NEE comparison)**                               |                                                                                                                              |
++----------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------+
+| **Mitigator credibility (baseline cross-section)** | What is the strength of the relationship between trust parameter point estimates and trust comparative position at baseline? |
++----------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------+
+| **Mitigator credibility (historical time series)** | What is the strength of the relationship between trust parameter point estimates and historical local or national trends?    |
++----------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------+
+
+We then provide a discussion of the results, including the key findings and any limitations or issues to note.
+
+## Schemes in analysis
+
+The following schemes have completed the exercise.
+
+```{r site_list}
+nhp_tagged_runs_meta |> 
+  mutate(create_datetime = as.Date(ymd_hms(create_datetime)),
+         run_stage = str_to_title(str_extract(run_stage, "^[^_]+"))) |> 
+  left_join(trust_code_lookup, 
+            by = c("dataset" = "Trust ODS Code")) |> 
+  select(Trust = `Name of Trust`,
+         Site = `Name of Hospital site`,
+         `Trust code` = dataset,
+         `Run stage` = run_stage,
+         Date = create_datetime) |> 
+  knitr::kable(caption = "Sites that have completed exercise")
+```
+
+## Analyses
+
+```{r mitigator_agg_data}
+
+n_schemes <- nrow(nhp_tagged_runs_meta)
+mitigator_agg_data <- dat |> 
+  filter(!is.na(value_mid)) |> 
+  summarise(n = n(),
+            coverage = n / n_schemes,
+            avg_lo = mean(value_lo),
+            avg_mid = mean(value_mid),
+            avg_hi = mean(value_hi),
+            avg_certainty = mean(value_range),
+            nee_p10 = mean(nee_p10),
+            nee_mid = mean(nee_p50),
+            nee_p90 = mean(nee_p90),
+            .by = c(mitigator_group, mitigator_variable))
+```
+
+### Mitigator coverage
+
+<!-- # ```{r mitigator_coverage} -->
+<!-- # dat |>  -->
+<!-- #   group_by(mitigator_type, mitigator_activity_type, mitigator_variable) |>  -->
+<!-- #   summarise(n = sum(!is.na(value_mid)), -->
+<!-- #             coverage = n / nrow(nhp_tagged_runs_meta)) |>  -->
+<!-- #   select(!n) |>  -->
+<!-- #   arrange(mitigator_type, mitigator_activity_type,coverage) |>  -->
+<!-- #   mutate(coverage = scales::percent(coverage)) |>  -->
+<!-- #   DT::datatable(filter = "top", -->
+<!-- #                 colnames = c("Mitigator type", -->
+<!-- #                              "Activity type", -->
+<!-- #                              "Mitigator", -->
+<!-- #                              "Coverage")) -->
+<!-- # ``` -->
+
+The table below shows the coverage of mitigator groups across the 16 that have model runs. This is based on the number of times a given mitigator group appeared divided by the maximum given the number of schemes. 
+
+```{r mitigator_coverage}
+mitigator_group_coverage <- mitigator_agg_data |> 
+  group_by(mitigator_group) |> 
+  summarise(mitigators_in_group = n(),
+            incidence = sum(n),
+            max_incidence = mitigators_in_group * n_schemes) |> 
+  janitor::adorn_totals(name = "All groups") |> 
+  mutate(coverage = incidence / max_incidence) 
+
+mitigator_group_coverage |> 
+  mutate(coverage=scales::percent(coverage)) |> 
+  knitr::kable(col.names = c("Mitigator group",
+                             "Number of mitigators in group",
+                             "Incidence across schemes",
+                             "Max incidence across schemes",
+                             "Coverage across schemes"),
+               caption = "Coverage of mitigator groups across schemes")
+  
+```
+### Relative ambition
+
+<!-- # ```{r mitigator_ambition} -->
+<!-- # dat |>  -->
+<!-- #   group_by(mitigator_type, mitigator_activity_type, mitigator_variable) |>  -->
+<!-- #   summarise(mean_value = mean(value_mid, na.rm = TRUE)) |>  -->
+<!-- #   arrange(mitigator_type, mitigator_activity_type,mean_value) |>  -->
+<!-- #   DT::datatable(filter = "top", -->
+<!-- #                 colnames = c("Mitigator type", -->
+<!-- #                              "Activity type", -->
+<!-- #                              "Mitigator", -->
+<!-- #                              "Average central value")) -->
+<!-- # ``` -->
+
+<!-- The table shows the distribution of the average scheme mid-points. For example, we can see that the least ambitious third of average mid-points fell between 0.87 and 0.95. -->
+
+<!-- # ```{r ambition_terciles} -->
+<!-- # terciles_ambition <- mitigator_agg_data |>  -->
+<!-- #   mutate( -->
+<!-- #     mitigator_ambition = case_when( -->
+<!-- #       ntile(avg_mid, 3) == 1 ~ "Most ambition", -->
+<!-- #       ntile(avg_mid, 3) == 2 ~ "Median ambition", -->
+<!-- #       ntile(avg_mid, 3) == 3 ~ "Least ambition", -->
+<!-- #       TRUE ~ NA_character_)) |>  -->
+<!-- #   group_by(mitigator_ambition) |>  -->
+<!-- #   summarise(n=n(), -->
+<!-- #             min = min(avg_mid), -->
+<!-- #             max = max(avg_mid)) -->
+<!-- #  -->
+<!-- # terciles_ambition |>  -->
+<!-- #   select(!n) |>  -->
+<!-- #   knitr::kable(col.names = c("Mitigator ambition", -->
+<!-- #                              "Range min", -->
+<!-- #                              "Range max"), -->
+<!-- #                caption = "Distribution of aggregate mitigator midpoints") -->
+<!-- # ``` -->
+
+<!-- # ```{r ambition_by_group} -->
+<!-- # -->
+<!-- #  mitigator_group_ambition <- mitigator_agg_data |> -->
+<!-- #    mutate( -->
+<!-- #      mitigator_ambition = case_when( -->
+<!-- #        ntile(avg_mid, 3) == 1 ~ "Most ambition", -->
+<!-- #        ntile(avg_mid, 3) == 2 ~ "Median ambition", -->
+<!-- #        ntile(avg_mid, 3) == 3 ~ "Least ambition", -->
+<!-- #        TRUE ~ NA_character_)) |> -->
+<!-- #    count(mitigator_group, mitigator_ambition) |> -->
+<!-- #    tidyr::pivot_wider(names_from = mitigator_ambition, values_from = n, values_fill = 0) -->
+<!-- # -->
+<!-- #  mitigator_group_ambition |> -->
+<!-- #    rename("Mitigator group" = mitigator_group) |> -->
+<!-- #    knitr::kable(caption = "Mitigator groups by ambition level") -->
+<!-- # -->
+<!-- # ``` -->
+
+<!-- # ```{r mitigator_ambition} -->
+<!-- # mitigator_group_ambition <- mitigator_agg_data |>  -->
+<!-- #   mutate(  -->
+<!-- #     mitigator_ambition = case_when(  -->
+<!-- #       avg_mid > 0.9 ~ "Low ambition",  -->
+<!-- #       avg_mid > 0.5 ~ "Medium ambition",  -->
+<!-- #       avg_mid <= 0.5 ~ "High ambition",  -->
+<!-- #       TRUE ~ NA_character_)) |>  -->
+<!-- #   count(mitigator_group, mitigator_ambition) |>  -->
+<!-- #   tidyr::pivot_wider(names_from = mitigator_ambition, values_from = n, values_fill = 0) -->
+<!-- #  -->
+<!-- #  -->
+<!-- # mitigator_ambition_by_group |>  -->
+<!-- #   select(!n) |>  -->
+<!-- #   mutate(p = scales::percent(p)) |>  -->
+<!-- #   pivot_wider(names_from = mitigator_ambition, values_from = p) |>  -->
+<!-- #   select(mitigator_group, high, med, low) -->
+<!-- #  -->
+<!-- # ``` -->
+
+When assessing the relative ambition of mitigators across schemes, we categorise the scheme inputs into three groups: low ambition (less than a 10% reduction), medium ambition (a 10% to 50% reduction), and high ambition (reduction of 50% or more).
+
+The table shows, for each mitigator group, the proportion of scheme inputs which fall into each of these thresholds. We can see that across all mitigators 24 (3%) of scheme inputs were high ambition, 477 (57%) were medium ambition, and 334 (40%) were low ambition.
+
+```{r mitigator_ambition}
+mitigator_ambition_by_group <- dat |> 
+  filter(!(is.na(value_mid))) |> 
+  mutate(
+    mitigator_ambition = case_when(
+      value_mid > 0.9 ~ "low",
+      value_mid > 0.5 ~ "med",
+      value_mid <= 0.5 ~ "high",
+      TRUE ~ NA_character_)) |> 
+  count(mitigator_group, mitigator_ambition) 
+
+mitigator_ambition_by_group |> 
+  pivot_wider(names_from = mitigator_ambition, values_from = n, values_fill = 0) |> 
+  select(mitigator_group, high, med, low) |> 
+  janitor::adorn_totals(name = "All groups") |> 
+  mutate(total = high + med + low) |> 
+  mutate(across(c(high, med, low, total),
+                ~ paste0(.x, 
+                         " (", 
+                         scales::percent(
+                           .x / total, 
+                           accuracy = 1), ")"))) |> 
+  knitr::kable(caption = "Number and proportion of scheme responses by group and ambition level",
+               col.names = c("Mitigator group",
+                             "High",
+                             "Medium",
+                             "Low",
+                             "Total"))
+
+```
+
+### Relative certainty
+
+<!-- # ```{r mitigator_certainty} -->
+<!-- # dat |>  -->
+<!-- #   group_by(mitigator_type, mitigator_activity_type, mitigator_variable) |>  -->
+<!-- #   summarise(mean_range = mean(value_range, na.rm = TRUE)) |>  -->
+<!-- #   arrange(mitigator_type, mitigator_activity_type,mean_range) |>  -->
+<!-- #   DT::datatable(filter = "top", -->
+<!-- #                 colnames = c("Mitigator type", -->
+<!-- #                              "Activity type", -->
+<!-- #                              "Mitigator", -->
+<!-- #                              "Average CI width")) -->
+<!-- # ``` -->
+
+When assessing mitigator certainty, we categorise scheme inputs into three groups: high certainty (an input range less than 0.05, including point estimates), medium certainty (an input range from 0.05 to 0.15), and low certainty (an input range of 0.15 and above).
+
+The table below indicates that, across all groups, 246 (29%) of scheme inputs were highly certain, 299 (36%) were medium certainty, and 290 (35%) were low certainty.
+
+```{r mitigator_certainty}
+mitigator_certainty_by_group <- dat |> 
+  filter(!(is.na(value_mid))) |> 
+  mutate(
+    mitigator_certainty = case_when(
+      value_range < 0.05 ~ "high",
+      value_range < 0.15 ~ "med",
+      value_range >= 0.15 ~ "low",
+      TRUE ~ NA_character_)) |> 
+  count(mitigator_group, mitigator_certainty) 
+
+mitigator_certainty_by_group |> 
+  pivot_wider(names_from = mitigator_certainty, values_from = n, values_fill = 0) |> 
+  select(mitigator_group, high, med, low) |> 
+  janitor::adorn_totals(name = "All groups") |> 
+  
+  mutate(total = high + med + low) |> 
+  mutate(across(c(high, med, low, total),
+                ~ paste0(.x, 
+                         " (", 
+                         scales::percent(
+                           .x / total, 
+                           accuracy = 1), ")"))) |> 
+  knitr::kable(caption = "Number and proportion of scheme responses by group and certainty level",
+               col.names = c("Mitigator group",
+                             "High",
+                             "Medium",
+                             "Low",
+                             "Total"))
+```
+
+### Credibility compared to NEE
+
+The table below shows the counts of inputs by mitigator group across all schemes which were either as or more ambitious than the NEE midpoint for the mitigator or less ambitious than the NEE mid-point. It indicates that, across all mitigators, 137 (18%) were as or more ambitious than the NEE mid-point, and 608 (82%) were less ambitious.
+
+```{r nee_credibility}
+nee_credibility <- dat |> 
+  filter(!is.na(value_mid)) |> 
+  mutate(nee_diff = case_when(value_mid > nee_p50 ~ ">NEE",
+                              value_mid <= nee_p50 ~ "<=NEE",
+                              TRUE ~ "NEE_missing")) |> 
+  count(mitigator_group, nee_diff)
+
+nee_credibility |>
+  pivot_wider(names_from = nee_diff, values_from = n, values_fill = 0) |> 
+  janitor::adorn_totals(name = "All groups") |> 
+  mutate(total = `<=NEE` + `>NEE` + `NEE_missing`) |> 
+  mutate(across(c(`<=NEE`, `>NEE`, `NEE_missing`, total),
+                ~ paste0(.x, 
+                         " (", 
+                         scales::percent(
+                           .x / total, 
+                           accuracy = 1), ")"))) |> 
+  knitr::kable(caption = "Number and proportion of scheme responses by group and comparison to NEE mid-point",
+               col.names = c("Mitigator group",
+                             "As or more ambitious",
+                             "Less ambitious",
+                             "No NEE",
+                             "Total"))
+```
+
+
+<!-- -   Grey horizontal bar represents the total range of values from NEE, with vertical line being the p50 -->
+<!-- -   black horizontal line represents the range between the means of the low values and high values for trusts selecting that mitigator, with dot being the mean of the central values -->
+<!-- -   top 6 in terms of absolute difference between aggregate central value and NEE central value shown -->
+
+<!-- ```{r comparison_to_NEE} -->
+<!-- # Need to check the difference between nee_p50 and nee_mean (the first is  -->
+<!-- # mid_point of p10 and p90) -->
+<!-- nee_comparison <- dat |>  -->
+<!--   group_by(mitigator_type, mitigator_activity_type, mitigator_variable) |>  -->
+<!--   summarise(mean_lo = mean(value_lo, na.rm = TRUE), -->
+<!--             mean_hi = mean(value_hi, na.rm = TRUE), -->
+<!--             mean_value = mean(value_mid, na.rm = TRUE), -->
+<!--             nee_p10 = mean(nee_p10, na.rm = TRUE), -->
+<!--             nee_p90 = mean(nee_p90, na.rm = TRUE), -->
+<!--             nee_p50 = mean(nee_mean, na.rm = TRUE), -->
+<!--             mean_abs_diff = abs(nee_p50 - mean_value)) |>  -->
+<!--   # note that we select those with the largest difference between the central  -->
+<!--   # value of the NEE range and the mean of the central values from trusts -->
+<!--   slice_max(order_by = mean_abs_diff)  -->
+
+<!-- nee_comparison |>  -->
+<!--   # creating plot from here   -->
+<!--   ggplot2::ggplot( -->
+<!--     ggplot2::aes( -->
+<!--       x = mean_value,  -->
+<!--       y = mitigator_variable -->
+<!--     ) -->
+<!--   ) + -->
+<!--   ggplot2::geom_crossbar( -->
+<!--     ggplot2::aes( -->
+<!--       x = nee_p50,  -->
+<!--       xmin = nee_p90, -->
+<!--       xmax = nee_p10 -->
+<!--     ), -->
+<!--     fill = "lightgrey", -->
+<!--     colour = "grey85", -->
+<!--     alpha = 0.2, -->
+<!--     width = 0.4 -->
+<!--   ) + -->
+<!--   ggplot2::geom_pointrange( -->
+<!--     ggplot2::aes(x = mean_value,  -->
+<!--                  xmin = mean_lo, -->
+<!--                  xmax = mean_hi), -->
+<!--     size = 0.3, -->
+<!--     linewidth = 1.2 -->
+<!--   ) + -->
+<!--   labs(title = "NEE results vs scheme aggregate",  -->
+<!--        subtitle = "6 biggest differences", -->
+<!--        caption = "Grey bar represents NEE; black line represents scheme average") -->
+<!-- ``` -->
+
+### Credibility given baseline cross-section
+
+```{r baseline_credibility}
+source("baseline_comparison_plot.R")
+
+baseline_comparison_plot("falls_related_admissions")
+```
+
+
+### Credibility given trust time series
+
+
+
+```{r time_series_credibility}
+
+baseline_5yr_trends <- historical_mitigators_data |>
+  select(!n) |> 
+  filter(procode %in% nhp_tagged_runs_meta$dataset,
+         fyear %in% c(201516,201920)) |> 
+  tidyr::pivot_wider(names_from = fyear, values_from = rate) |> 
+  mutate(total_relative_change = `201920` / `201516`,
+         annual_relative_change = total_relative_change^(1/5))
+
+input_yearly_trends <- dat |> 
+  select(scheme_name, scheme_code, mitigator_variable, value_mid, year_range) |> 
+  mutate(reduction_pa = (value_mid - 1) / year_range)
+
+baseline_and_input_trends <- input_yearly_trends |> 
+  left_join(baseline_5yr_trends, 
+            by = c("scheme_code"="procode", "mitigator_variable"="strategy"))
+
+
+baseline_and_input_trends |> 
+  filter(
+    mitigator_variable == "alcohol_partially_attributable_acute") |> 
+  ggplot(aes(x = reduction_pa, y = annual_relative_change)) +
+  geom_point() +
+  xlab("scheme's projected annual change") +
+  ylab("scheme's annual change in 5 years to 2019-20") +
+  labs(title = "scatter plot showing comparison between historical change and projected change",
+       subtitle = "for alcohol_partially_attributable_acute cases") +
+  geom_text_repel(aes(label = scheme_code), size = 4)
+
+
+
+
+  
+```
+
+
+# Discussion
+
+## Summary of key findings
+
+## Limitations / issues to note
+
+## Possible further work
+
+## Appendix - 1 page for each participating trust
+
+### Summary
+
+#### How many parameter set compared to other participating trusts
+
+#### More or less ambitious than other participating trusts (average over all mitigators)
+
+#### More or less certain than other participating trusts (average over all mitigators)
+
+#### More of less ambitious than NEE (average over all mitigators)
+
+#### More or less ambitious given baseline (average over all mitigators)
+
+#### More or less ambitious given historical trend (average over all mitigators)
+
+### Outlier parameters
+
+#### Parameters that other trusts have set but they haven't
+
+#### Parameter values that are more than 2 sds on any of the assessments above
+
+## Annex: Methods and data sources
+
+### Describe the two dfs
+
+### Describe the NEE exercise
+
+### Mention the issue about different model horizons
+
+### Anything on standardisation / rescaling / annualising
+
+### Describe how we do each of the 6 assessments
+
+#### Use of mitigator assumptions / mitigator coverage
+
+#### Relative ambition (central estimate) -- compared to trust average
+
+#### Relative certainty (P80 range) -- compared to trust average
+
+#### Credibility given NEE (central estimate)
+
+#### Credibility given baseline cross-section (central estimate)
+
+#### Credibility given trust time series (central estimate)
+
+### How do we aggregate effects by Trust over mitigators and by mitigator over Trusts
