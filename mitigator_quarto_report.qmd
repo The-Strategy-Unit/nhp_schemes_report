@@ -108,12 +108,16 @@ dat <- populate_table(
 #get the baseline data
 baseline <- historical_mitigators_data |> 
   filter(fyear == 201920,
-         procode %in% nhp_tagged_runs_meta$dataset)
+         procode %in% nhp_tagged_runs_meta$dataset) |> 
+  select(!fyear,
+         baseline_rate = rate,
+         baseline_n = n)
+  
 
 # cross-reference the baseline value and scheme inputs
-baseline_inputs_data <- left_join(baseline, dat,
-  by = c("procode" = "scheme_code",
-         "strategy" = "mitigator_variable"))
+baseline_inputs_data <- left_join(dat, baseline,
+  by = c("scheme_code" = "procode",
+         "mitigator_variable" = "strategy"))
 ```
 
 ## Background
