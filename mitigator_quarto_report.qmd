@@ -5,10 +5,20 @@ format:
   html:
     embed-resources: true
     toc: true
-    #code-fold: true
-    message: false
-    warning: false
-    echo: false
+    code-fold: true
+    execute:
+      message: false
+      warning: false
+      echo: false
+  # docx:
+  #   toc: true
+  #   number-sections: true
+  #   highlight-style: github
+  #   execute:
+  #     message: false
+  #     warning: false
+  #     echo: false
+    
 editor: visual
 ---
 
