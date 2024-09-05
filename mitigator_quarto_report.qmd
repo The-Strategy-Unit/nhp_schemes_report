@@ -78,6 +78,13 @@ extracted_params <- extract_params(nhp_tagged_runs_params, nhp_tagged_runs_meta)
 skeleton_table <- prepare_skeleton_table(extracted_params)
 
 # adjust the day case mitigator names for the lookup
+# just remove from skeleton table
+skeleton_table <- skeleton_table |> filter(
+  !(strategy %in% c("bads_daycase",
+                    "bads_daycase_occasional",
+                    "bads_outpatients",
+                    "bads_outpatients_or_daycase")))
+
 # in the extracted parameters
 extracted_params <- extracted_params |> 
   dplyr::mutate(
