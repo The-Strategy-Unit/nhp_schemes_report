@@ -203,6 +203,20 @@ We consider lines of inquiry within this report as detailed in the below table. 
 
 We then provide a discussion of the results, including the key findings and any limitations or issues to note.
 
+## Mitigator in analysis 
+
+The table below provides information on all the 92 mitigators considered in this paper, including their grouping, the activity type (i.e. inpatient admission, outpatient attendances and A&E attendances) and type (activity avoidance or efficiencies).
+
+```{r mitigators_list}
+mitigator_lookup |> 
+  select(Grouping, 
+         `Activity type`, 
+         `Mitigator type`, 
+         Mitigator = `Strategy name`) |> 
+  knitr::kable(caption = "All mitigators in analysis")
+
+```
+
 ## Schemes in analysis
 
 The following schemes have completed the exercise.
