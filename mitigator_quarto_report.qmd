@@ -184,7 +184,7 @@ The purpose of this report is to allow the NHP to assess the breadth, ambition, 
 We consider lines of inquiry within this report as detailed in the below table. (Note that above NEE refers to the National Elicitation Exercise which was conducted in 2023 to ask subject matter experts their views on the likely reasonable ranges of change in the future for each of the mitigators in the model.)
 
 +----------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------+
-| Line of inquiry                                    | Question                                                                                                                     |
+| Area of analysis                                   | Question                                                                                                                     |
 +====================================================+==============================================================================================================================+
 | **Mitigator coverage**                             | What proportion of trusts have set each parameter?                                                                           |
 +----------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------+
@@ -256,7 +256,7 @@ mitigator_agg_data <- dat |>
 
 ### Mitigator coverage
 
-The table below shows the coverage of mitigator groups across the 16 that have model runs. This is based on the number of times a given mitigator group appeared divided by the maximum given the number of schemes. 
+The table below shows the coverage of mitigator groups across the `r n_schemes` that have model runs. This is based on the number of times a given mitigator group appeared divided by the maximum given the number of schemes.
 
 ```{r mitigator_coverage}
 mitigator_group_coverage <- mitigator_agg_data |> 
