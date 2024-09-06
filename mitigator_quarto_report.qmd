@@ -282,7 +282,7 @@ mitigator_group_coverage |>
 
 When assessing the relative ambition of mitigators across schemes, we categorise the scheme inputs into three groups: low ambition (less than a 10% reduction), medium ambition (a 10% to 50% reduction), and high ambition (reduction of 50% or more).
 
-The table shows, for each mitigator group, the proportion of scheme inputs which fall into each of these thresholds. We can see that across all mitigators 24 (3%) of scheme inputs were high ambition, 477 (57%) were medium ambition, and 334 (40%) were low ambition.
+The table shows, for each mitigator group, the proportion of scheme inputs which fall into each of these thresholds. We can see that across all mitigators 24 (3%) of scheme inputs were high ambition, 510 (56%) were medium ambition, and 375 (41%) were low ambition.
 
 ```{r mitigator_ambition}
 mitigator_ambition_by_group <- dat |> 
@@ -319,7 +319,7 @@ mitigator_ambition_by_group |>
 
 When assessing mitigator certainty, we categorise scheme inputs into three groups: high certainty (an input range less than 0.05, including point estimates), medium certainty (an input range from 0.05 to 0.15), and low certainty (an input range of 0.15 and above).
 
-The table below indicates that, across all groups, 268 (29%) of scheme inputs were highly certain, 316 (36%) were medium certainty, and 325 (36%) were low certainty.
+The table below indicates that, across all groups, 268 (29%) of scheme inputs were highly certain, 316 (35%) were medium certainty, and 325 (36%) were low certainty.
 
 ```{r mitigator_certainty}
 mitigator_certainty_by_group <- dat |> 
@@ -354,7 +354,7 @@ mitigator_certainty_by_group |>
 
 ### Credibility compared to NEE
 
-The table below shows the counts of inputs by mitigator group across all schemes which were either as or more ambitious than the NEE midpoint for the mitigator or less ambitious than the NEE mid-point. It indicates that, across all mitigators, 137 (18%) were as or more ambitious than the NEE mid-point, and 608 (82%) were less ambitious.
+The table below shows the counts of inputs by mitigator group across all schemes which were either as or more ambitious than the NEE midpoint for the mitigator or less ambitious than the NEE mid-point. It indicates that, across all mitigators, 152 (17%) were as or more ambitious than the NEE mid-point, and 663 (73%) were less ambitious, with the remainder (94,10%) not being covered in the NEE exercise.
 
 ```{r nee_credibility}
 nee_credibility <- dat |> 
