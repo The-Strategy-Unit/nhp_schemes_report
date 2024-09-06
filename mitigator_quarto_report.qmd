@@ -429,33 +429,51 @@ nee_credibility |>
 #### More or less ambitious given historical trend (average over all mitigators)
 
 ### Outlier parameters
+# Annex: Methods and data sources
 
 #### Parameters that other trusts have set but they haven't
+## Data sources
 
 #### Parameter values that are more than 2 sds on any of the assessments above
+There are three broad data sources used in this analysis:
 
-## Annex: Methods and data sources
+-   **Scheme inputs from the NHP D&C model** -- this includes one row per mitigator and scheme (**909** total combinations), with information on the p10, p90 and mid-point for that particular mitigator as well as the baseline and horizon year.
+-   **NEE results** -- this provides information on the average p10 and p90 selected by subject matter experts as part of the NEE exercise for the **78** mitigators included.
+-   **Scheme historical activity rates** -- this provides the rates of activity falling in scope of mitigators by scheme, financial year (from 2008-09 to 2022-23), and **90** mitigators.
 
-### Describe the two dfs
+### National expert elicitation exercise
 
-### Describe the NEE exercise
+The NEE exercise was conducted in the autumn of 2023 as a way of gathering subject matter experts' (SMEs) views on the likely values that parameters in the NHP D&C model would take in the future at an England level. For example, SMEs might have indicated what they believed would be the impact of healthy life expectancy on hospital activity in the future.
 
-### Mention the issue about different model horizons
+The values provided by SMEs took the form of the the 10th and 90th percentiles (commonly known as the p10-p90 or 80% interval).
 
-### Anything on standardisation / rescaling / annualising
+Efforts were taken to ensure that the SMEs' predictions were free from cognitive biases such as anchoring, availability, and representativeness, groupthink, overconfidence, and difficulties associated with communicating knowledge in numbers and probabilities.
 
-### Describe how we do each of the 6 assessments
+The NEE exercise is considered pertinent to our analysis as for most of the mitigators that have been set locally (78 out of 92), it provides a national-level view on which to consider the relative ambition that schemes have shown.
 
-#### Use of mitigator assumptions / mitigator coverage
+## Model horizons
 
-#### Relative ambition (central estimate) -- compared to trust average
+Although all schemes are using the baseline of 2019-20, not all schemes have the same model horizon. Thus when comparing the schemes' inputs, the values are not necessarily like-for-like given that a sooner horizon indicates a faster yearly change, all other things being equal -- e.g. a 20% reduction in 10 years will be more dramatic than a 20% reduction in 20 years.
 
-#### Relative certainty (P80 range) -- compared to trust average
+With one exception, this has not been controlled for: when considering the relationship between scheme's inputs and the historical 5-year trends, we have standardised both to be yearly values, assuming compounding growth (i.e. if a scheme has set a parameter at $x$ and the number of years between the baseline is $n$ , then the yearly value is calculated as $x^\frac{1}{n}$ .
 
-#### Credibility given NEE (central estimate)
+## Assessment methodology
 
-#### Credibility given baseline cross-section (central estimate)
+The table below outlines how our counts are calculated for each area of analysis. We have separate aggregations for the analysis by mitigator and the analysis by scheme. The mitigator-level analyses are presented over mitigator groups given there are 92 individual mitigators.
 
-#### Credibility given trust time series (central estimate)
++----------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------+
+| **Area of analysis**                   | Mitigator aggregation (summarised by mitigator group)                                                                               | Scheme aggregation                                  |
++========================================+=====================================================================================================================================+=====================================================+
+| **Coverage**                           | \# times mitigator selected by scheme                                                                                               | \# mitigators selected by scheme                    |
++----------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------+
+| **Relative ambition**                  | \# mitigator central values falling into low (\<10% reduction), medium (10% to 50% reduction), high ambition (50%+ reduction)       | avg of scheme's mitigator mid-points                |
++----------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------+
+| **Relative certainty**                 | \# mitigator ranges falling into low (range of 0.15+), medium (range between 0.05 and 0.15) , high certainty (range less than 0.05) | avg of scheme's mitigator ranges                    |
++----------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------+
+| **NEE credibility**                    | \# mitigator central values less than or equal to NEE mid-point vs more than NEE mid-point                                          | avg difference scheme's mid-point and NEE mid-point |
++----------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------+
+| **Credibility given baseline**         | \[to be decided\]                                                                                                                   | \[to be decided\]                                   |
++----------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------+
+| **Credibility given historical rates** | \[to be decided\]                                                                                                                   | \[to be decided\]                                   |
++----------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------+
 
-### How do we aggregate effects by Trust over mitigators and by mitigator over Trusts
