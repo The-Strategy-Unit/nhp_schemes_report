@@ -277,10 +277,10 @@ mitigator_group_coverage |>
                caption = "Coverage of mitigator groups across schemes")
   
 ```
+
 ### Relative ambition
 
-
-When assessing the relative ambition of mitigators across schemes, we categorise the scheme inputs into three groups: low ambition (less than a 10% reduction), medium ambition (a 10% to 50% reduction), and high ambition (reduction of 50% or more).
+When assessing the relative ambition of mitigators across schemes, we categorise the scheme inputs into three groups: low ambition (less than a 10% reduction), medium ambition (a 10% to one third reduction), and high ambition (reduction of one third or more).
 
 The table shows, for each mitigator group, the proportion of scheme inputs which fall into each of these thresholds. We can see that across all mitigators 24 (3%) of scheme inputs were high ambition, 510 (56%) were medium ambition, and 375 (41%) were low ambition.
 
@@ -290,8 +290,8 @@ mitigator_ambition_by_group <- dat |>
   mutate(
     mitigator_ambition = case_when(
       value_mid > 0.9 ~ "low",
-      value_mid > 0.5 ~ "med",
-      value_mid <= 0.5 ~ "high",
+      value_mid > (2/3) ~ "med",
+      value_mid <= (2/3) ~ "high",
       TRUE ~ NA_character_)) |> 
   count(mitigator_group, mitigator_ambition) 
 
