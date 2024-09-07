@@ -390,27 +390,115 @@ nee_credibility |>
 ### Credibility given trust time series
 
 
+# Scheme analyses
 
+```{r highlight_schemes_2024_09_27}
+highlight_schemes_2024_09_27 <- function(data) {
+  data |> 
+    mutate(color_fill = case_when(
+      scheme_code == "RGN" ~ "blue",
+      scheme_code == "RCX" ~ "green",
+      scheme_code == "RGR" ~ "red",
+      scheme_code == "RGP" ~ "purple",
+      TRUE ~ "grey"))
+}
 
+```
 
+## Summary
 
+### How many parameter set compared to other participating schemes
 
+Below we can see the number of mitigators that each scheme has selected in descending order.
 
+```{r mitigator_coverage_by_scheme}
+mitigator_coverage_by_scheme <- dat |> 
+  filter(!is.na(scheme_name)) |> 
+  count(scheme_code,scheme_name) 
 
-
-
-
+mitigator_coverage_by_scheme |> 
+  highlight_schemes_2024_09_27() |> 
+  ggplot() +
+  geom_bar(aes(x=n, y=reorder(scheme_name, n), fill=color_fill), 
+           stat="identity") +
+  scale_fill_identity() +
+  ggtitle("Mitigator coverage by scheme") + 
+  xlab("Number of mitigators") +
+  theme(axis.title.y = element_blank()) +
+  NHSRtheme::theme_nhs()
   
 ```
 
+### More or less ambitious than other participating trusts (average over all mitigators)
 
-# Discussion
+Below, for each scheme, we can see the average ambition over its selected mitigators in descending order. Note that the lower the number, the more ambitious the given scheme has been in its selections given that the ambition is a reduction in the activity in scope of the mitigators.
 
-## Summary of key findings
+```{r mitigator_ambition_by_scheme}
+mitigator_ambition_by_scheme <- dat |> 
+  filter(!is.na(value_mid)) |> 
+  summarise(average_ambition = mean(value_mid),
+            .by = c(scheme_code, scheme_name))
 
-## Limitations / issues to note
+mitigator_ambition_by_scheme |> 
+  highlight_schemes_2024_09_27() |> 
+  ggplot() +
+  geom_bar(aes(x=average_ambition, y=reorder(scheme_name, average_ambition, decreasing = TRUE), fill=color_fill), 
+           stat="identity") +
+  scale_fill_identity() +
+  ggtitle("Mitigator ambition by scheme") + 
+  xlab("Average mitigator mid-point") +
+  theme(axis.title.y = element_blank()) +
+  NHSRtheme::theme_nhs()
+```
 
-## Possible further work
+### More or less certain than other participating trusts (average over all mitigators)
+
+Below we can see the average mitigator certainty by scheme. This is calculated as the average range between the p10 and p90 provided for mitigators. This is presented in descending order of certainty, i.e. ascending order of average range.
+
+```{r mitigator_certainty_by_scheme}
+mitigator_certainty_by_scheme <- dat |> 
+  filter(!is.na(value_mid)) |> 
+  summarise(average_range = mean(value_range),
+            .by = c(scheme_code, scheme_name))
+
+mitigator_certainty_by_scheme |> 
+  highlight_schemes_2024_09_27() |> 
+  ggplot() +
+  geom_bar(aes(x=average_range, y=reorder(scheme_name, average_range, decreasing= TRUE), fill=color_fill), 
+           stat="identity") +
+  scale_fill_identity() +
+  ggtitle("Mitigator ambition by scheme") + 
+  xlab("Average mitigator input range") +
+  theme(axis.title.y = element_blank()) +
+  NHSRtheme::theme_nhs()
+```
+
+### More of less ambitious than NEE (average over all mitigators)
+
+```{r nee_comparison_by_scheme}
+nee_comparison_by_scheme <- dat |> 
+  filter(!is.na(value_mid)) |> 
+  mutate(nee_comparison = case_when(value_mid > nee_p50 ~ "Less ambitious",
+                                     value_mid <= nee_p50 ~ "As or more ambitious", 
+                                     TRUE ~ "No NEE value")) |> 
+  count(scheme_code, scheme_name, nee_comparison)
+
+nee_comparison_by_scheme |> 
+  group_by(scheme_code, scheme_name) |> 
+  mutate(p = n/sum(n)) |> 
+  filter(nee_comparison == "As or more ambitious") |> 
+  highlight_schemes_2024_09_27() |> 
+  ggplot() +
+  geom_bar(aes(x=p, y=reorder(scheme_name,p), fill=color_fill), 
+           stat="identity", 
+           position = "dodge") +
+  scale_fill_identity() +
+  ggtitle("NEE comparison by scheme") + 
+  xlab("Proportion of mitigators as or more ambitious than NEE") +
+  theme(axis.title.y = element_blank()) +
+  scale_x_continuous(labels = scales::percent)+
+  NHSRtheme::theme_nhs()
+```
 
 ## Appendix - 1 page for each participating trust
 
