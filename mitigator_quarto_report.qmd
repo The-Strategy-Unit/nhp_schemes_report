@@ -792,9 +792,40 @@ outlier_mitigators_by_scheme |>
 
 ## Summary of key findings
 
+### Parameter coverage
+
+-   Across mitigatable activity groups, coverage of parameters ranges from 51.8% (*Emergency department and acute medicine activity*) to 58.4% (*Planned medical activity (adult)*).
+-   Hinchinbrooke has selected the joint most parameters (84) of all schemes. West Suffolk has selected the least of the four schemes (58) but is still in the middle position of all schemes (9th out of 17).
+
+### Parameter ambition
+
+-   *Planned surgical activity (adult)* contains the largest proportion of high ambition assumptions (52, 21.0%), whilst *Hospital activity amenable to psychiatric liaison and community psychiatry* contains the largest proportion of low ambition assumptions (18, 47.4%).
+-   We can see that the four schemes' ambition ranges between 0.91 (West Suffolk) and 0.76 (James Paget). these all fall in the range of average ambitions shown by all schemes (0.96 to 0.66).
+
+### Parameter certainty
+
+-   The grouping with the largest proportion of high certainty assumptions is *Planned medical activity (adult)* (17, 34.0%) whilst the one with largest proportion of low certainty assumptions is *Emergency department and acute medicine activity* (78, 44.3%)
+-   James Paget has shown the largest average uncertainty range in its selections (0.22) of all schemes, with the remaining three schemes being around the middle of all schemes and close clustered to one another (0.11 to 0.14)
+
+### NEE credibility
+
+-   A large majority (72.9%) of all assumptions across all schemes are less ambitious than the NEE mid-point, with only 16.7% being as or more ambitious.
+-   For each individual scheme that has model runs, a minority of its selections are as or more ambitious
+-   Of the four schemes, James Paget has the largest proportion inputs that are as or more ambitious (28.8%), whilst West Suffolk has the smallest (3.4%)
+
+### Baseline credibility
+
+-   We can see that a majority of all parameters showed a weakly negative or positive correlation to the scheme's baseline position (53, 58.9%). This is surprising given that broadly we might expect a higher baseline position to correlate with more ambition (i.e. a negative correlation to the model input).
+-   The only parameter groups which had a majority of their parameters' selections showing a moderately or strongly negative correlation was *Hospital activity amenable to psychiatric liaison and community psychiatry* (3, 75.0%) and *Emergency department and acute medicine activity* (14, 70.0%).
+
+### Notable scheme assumptions:
+
+-   West Suffolk has 16 unselected parameters which were used by at least half of all the schemes
+-   Hinchinbrooke has selected 2 parameters where their expectation is a 100% reduction in the associated activity
+
 ## Limitations / issues to note
 
--   In some cases schemes have selected parameters and inputted a value of 1 which is effectively the same as not selecting that parameter / mitigator
+-   In some cases schemes have selected parameters and inputted a value of 1 which is effectively the same as not selecting that parameter
 
 ## Possible further work
 
