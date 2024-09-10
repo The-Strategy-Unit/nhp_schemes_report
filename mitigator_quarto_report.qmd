@@ -137,23 +137,23 @@ baseline_inputs_data <- left_join(dat, baseline,
          "mitigator_variable" = "strategy"))
 ```
 
-# Mitigator analyses
+# Overview
 
 ## Background
 
 The government has committed to building more than 40 new hospitals by 2030. The New Hospital Programme (NHP), a partnership between Department of Health and Social Care (DHSC) and NHS England (NHSE), aims to ensure that this new hospital infrastructure will meet the future needs of the population and that the required investment represents value for money.
 
-Estimating future activity levels represents a critical early step in the process of scaling and designing new hospital infrastructure. The Strategy Unit (SU) has developed a Demand and Capacity (D&C) model to support the NHP and its stakeholders to make robust and auditable assessments of activity that hospitals may need to accommodate in the future.
+Estimating future activity levels represents a critical early step in the process of scaling and designing new hospital infrastructure. The Strategy Unit (SU) has developed a Demand and Activity model to support the NHP and its stakeholders to make robust and auditable assessments of activity that hospitals may need to accommodate in the future.
 
-## D&C model overview
+## The Demand and Activity Model overview
 
-The NHP D&C model takes activity at a chosen baseline year and projects into the future how activity levels might change without further action (though, importantly, assuming that past actions are sustained and scaled in line with population changes). It also allows systems to make judgements about evidence-based activity mitigations and productivity improvements that they plan to achieve (e.g. to reduce activity, lower its intensity, or divert it). From that combination of inputs, set as ranges to reflect uncertainty, the model forecasts a distribution of likely future activity. From that activity forecast, capacity requirements can then be derived.
+The Demand and Activity Model takes activity at a chosen baseline year and projects into the future how activity levels might change without further action (though, importantly, assuming that past actions are sustained and scaled in line with population changes). It also allows systems to make judgements about evidence-based activity mitigations and productivity improvements that they plan to achieve (e.g. to reduce activity, lower its intensity, or divert it). From that combination of inputs, set as ranges to reflect uncertainty, the model forecasts a distribution of likely future activity. From that activity forecast, capacity requirements can then be derived.
 
 The overall model logic is shown below (the elements in blue are currently live; the elements in orange are planned future refinements):
 
 ![](images/model_diagram.png)
 
-In developing the modelling approach for individual hospital schemes (as opposed to whole-programme average assumptions to drive e.g. the Programme Business Case), NHP has determined which input assumptions at the current time are best determined locally (following a systematic method, using a nationally determined structure- the NHP D&C model- and with constructive challenge) and which nationally. Assumptions are set nationally where there is little or no reason to believe that the factor is likely to operate differentially at a local level.
+In developing the modelling approach for individual hospital schemes (as opposed to whole-programme average assumptions to drive e.g. the Programme Business Case), NHP has determined which input assumptions at the current time are best determined locally (following a systematic method, using a nationally determined structure- the Demand and Activity Model- and with constructive challenge) and which nationally. Assumptions are set nationally where there is little or no reason to believe that the factor is likely to operate differentially at a local level.
 
 This is set out below:
 
@@ -179,43 +179,45 @@ This is set out below:
 
 ## Purpose of this report
 
-The purpose of this report is to allow the NHP to assess the breadth, ambition, certainty and credibility of trusts' activity mitigator assumptions. These constitute the bulk of the local assumptions made by each trust during the model rollout / local elicitation exercises that have been conducted this year.
+The purpose of this report is to allow the NHP to assess the breadth, ambition, certainty and credibility of trusts' mitigatable activity assumptions. These constitute the bulk of the local assumptions made by each trust during the model rollout / local elicitation exercises that have been conducted this year.
 
 ## Structure of the report
 
-We consider lines of inquiry within this report as detailed in the below table. (Note that above NEE refers to the National Elicitation Exercise which was conducted in 2023 to ask subject matter experts their views on the likely reasonable ranges of change in the future for each of the mitigators in the model.)
+We consider six lines of inquiry within this report as detailed in the below table.
 
-+----------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------+
-| Area of analysis                                   | Question                                                                                                                     |
-+====================================================+==============================================================================================================================+
-| **Mitigator coverage**                             | What proportion of trusts have set each parameter?                                                                           |
-+----------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------+
-| **Mitigator ambition**                             | Which mitigators are associated with the biggest relative and absolute reductions?                                           |
-+----------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------+
-| **Mitigator certainty**                            | Which mitigators are associated with the greater level of certainty / uncertainty?                                           |
-+----------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------+
-| **Mitigator credibility**                          | What is the strength of the relationship between trust parameter point estimates and those obtained from the NEE exercise?   |
-|                                                    |                                                                                                                              |
-| **(NEE comparison)**                               |                                                                                                                              |
-+----------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------+
-| **Mitigator credibility (baseline cross-section)** | What is the strength of the relationship between trust parameter point estimates and trust comparative position at baseline? |
-+----------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------+
-| **Mitigator credibility (historical time series)** | What is the strength of the relationship between trust parameter point estimates and historical local or national trends?    |
-+----------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------+
+Note that above NEE refers to the National Elicitation Exercise which was conducted in 2023 to ask subject matter experts their views on the likely reasonable ranges of change in the future for each of the sets of mitigatable activity in the model.
 
-We then provide a discussion of the results, including the key findings and any limitations or issues to note.
+Those areas which have been italicised have not been covered in this report given the methodology needs to be decided.
 
-## Mitigators in analysis
++----------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------+
+| Area of analysis                                   | Parameter-level                                                                                                             | Scheme-level                                                                              |
++====================================================+=============================================================================================================================+===========================================================================================+
+| **Parameter coverage**                             | What proportion of schemes have set each parameter?                                                                         | What proportion of parameters has each scheme selected?                                   |
++----------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------+
+| **Parameter ambition**                             | Which parameters are associated with the biggest relative and absolute reductions?                                          | What is the average ambition of each scheme's selected parameters?                        |
++----------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------+
+| **Parameter certainty**                            | Which parameters are associated with the greater level of certainty / uncertainty?                                          | What is the is the average certainty of each scheme's selected parameters?                |
++----------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------+
+| **Parameter credibility**                          | What is the strength of the relationship between scheme parameter point estimates and those obtained from the NEE exercise? | How do each scheme's parameter selections compare to the the NEE mid-point?               |
+|                                                    |                                                                                                                             |                                                                                           |
+| **(NEE comparison)**                               |                                                                                                                             |                                                                                           |
++----------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------+
+| **Parameter credibility (baseline cross-section)** | What is the strength of the relationship between scheme parameter point estimates and scheme position at baseline?          | *How do each scheme's parameter selections compare to the scheme's position at baseline?* |
++----------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------+
+| **Parameter credibility (historical time series)** | *What is the strength of the relationship between trust parameter point estimates and historical local or national trends?* | *How do each scheme's parameter selections compare to the historic trend?*                |
++----------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------+
 
-The table below provides information on all the 92 mitigators considered in this paper, including their grouping, the activity type (i.e. inpatient admission, outpatient attendances and A&E attendances) and type (activity avoidance or efficiencies).
+## Parameters in analysis
+
+The table below provides information on all the 92 sets of mitigatable activity considered in this paper, including their grouping, activity type (i.e. inpatient admission, outpatient attendances and A&E attendances) and type (activity avoidance or efficiencies).
 
 ```{r mitigators_list}
 mitigator_lookup |> 
-  select(Grouping, 
+  select(`Mitigatable activity` = `Strategy name`,
+         Grouping, 
          `Activity type`, 
-         `Mitigator type`, 
-         Mitigator = `Strategy name`) |> 
-  knitr::kable(caption = "All mitigators in analysis")
+         `Mitigation type` = `Mitigator type`) |> 
+  knitr::kable(caption = "All mitigatable activity in analysis")
 
 ```
 
@@ -237,7 +239,9 @@ nhp_tagged_runs_meta |>
   knitr::kable(caption = "Sites that have completed exercise")
 ```
 
-## Analyses
+# Parameter-level analsyes
+
+In the following section we present analyses for each grouping of mitigatable activity across all schemes that have submitted model runs. We consider all parameter inputs from each group and then present the analyses at the group-level for conciseness given there are 92 individual parameters.
 
 ```{r mitigator_agg_data}
 
@@ -256,9 +260,9 @@ mitigator_agg_data <- dat |>
             .by = c(mitigator_group, mitigator_variable))
 ```
 
-### Mitigator coverage
+## Parameter coverage
 
-The table below shows the coverage of mitigator groups across the `r n_schemes` that have model runs. This is based on the number of times a given mitigator group appeared divided by the maximum given the number of schemes.
+The table below shows the extent to which schemes have set assumptions to reduce mitigatable activity. This is based on the number of times parameters from a given mitigatable activity grouping were used divided by the maximum given the number of schemes.
 
 ```{r mitigator_coverage}
 mitigator_group_coverage <- mitigator_agg_data |> 
@@ -271,20 +275,20 @@ mitigator_group_coverage <- mitigator_agg_data |>
 
 mitigator_group_coverage |> 
   mutate(coverage=scales::percent(coverage, accuracy=0.1)) |> 
-  knitr::kable(col.names = c("Mitigator group",
-                             "Number of mitigators in group",
+  knitr::kable(col.names = c("Grouping",
+                             "Number of parameters in group",
                              "Incidence across schemes",
                              "Max incidence across schemes",
                              "Coverage across schemes"),
-               caption = "Coverage of mitigator groups across schemes")
+               caption = "Coverage of mitigatable activity groups across schemes")
   
 ```
 
-### Relative ambition
+## Scheme ambition
 
-When assessing the relative ambition of mitigators across schemes, we categorise the scheme inputs into three groups: low ambition (less than a 10% reduction), medium ambition (a 10% to one third reduction), and high ambition (reduction of one third or more).
+Next, we assess the relative ambition of the assumptions that schemes have set to reduce mitigatable activity. We categorise the schemes' inputs into three groups: low ambition (less than a 10% reduction), medium ambition (a 10% to one third reduction), and high ambition (reduction of one third or more).
 
-The chart shows, for each mitigator group, the proportion of scheme inputs which fall into each of these thresholds. We can see that across all mitigators selections 96 (10.6%) of scheme inputs were high ambition, 438 (48.2%) were medium ambition, and 375 (41.3%) were low ambition.
+The chart shows, for each group, the proportion of scheme inputs which fall into each of these thresholds. We can see that across all parameter selections 96 (10.6%) of scheme inputs were high ambition, 438 (48.2%) were medium ambition, and 375 (41.3%) were low ambition.
 
 ```{r mitigator_ambition}
 mitigator_ambition_by_group <- dat |> 
@@ -323,19 +327,20 @@ mitigator_ambition_final |>
                       labels = c("High", "Medium", "Low")) +
   xlab("Proportion") +
   scale_x_continuous(labels=scales::percent) +
-  ggtitle("Mitigator ambition") +
+  ggtitle("Scheme ambition") +
   NHSRtheme::theme_nhs()+
   theme(axis.title.y = element_blank(),
         axis.text.y = element_text(size=7),
         legend.text = element_text(size=12),
         plot.title = element_text(size=18),
-        legend) +
-  guides(fill = guide_legend(nrow=2))
+        legend)
 ```
 
-### Relative certainty
+## Relative certainty
 
-When assessing mitigator certainty, we categorise scheme inputs into three groups: high certainty (an input range less than 0.05, including point estimates), medium certainty (an input range from 0.05 to 0.15), and low certainty (an input range of 0.15 and above).
+Estimating the extent to which mitigable activity might be reduced in the future is an inherently difficult process. As such, we ask schemes to express their plans to reduce activity in the form on uncertainty interval. A narrow range suggests that schemes are confident about the proportion of that activity can be mitigated, a wider range indicates greater uncertainty.
+
+When assessing scheme certainty, we categorise scheme inputs into three groups: high certainty (an input range less than 0.05, including point estimates), medium certainty (an input range from 0.05 to 0.15), and low certainty (an input range of 0.15 and above).
 
 The chart below indicates that, across all groups, 268 (29.5%) of scheme inputs were highly certain, 316 (34.8%) were medium certainty, and 325 (35.8%) were low certainty.
 
@@ -376,19 +381,20 @@ mitigator_certainty_final |>
                       labels = c("High", "Medium", "Low")) +
   xlab("Proportion") +
   scale_x_continuous(labels=scales::percent) +
-  ggtitle("Mitigator certainty") +
+  ggtitle("Scheme certainty") +
   NHSRtheme::theme_nhs()+
   theme(axis.title.y = element_blank(),
         axis.text.y = element_text(size=7),
         legend.text = element_text(size=12),
-        plot.title = element_text(size=18)) +
-  guides(fill = guide_legend(nrow=2))
+        plot.title = element_text(size=18)) 
 
 ```
 
-### Credibility compared to NEE
+## Credibility of scheme assumptions: (1) comparison with national expert opinions
 
-The table below shows the counts of inputs by mitigator group across all schemes which were either as or more ambitious than the NEE midpoint for the mitigator or less ambitious than the NEE mid-point. It indicates that, across all mitigators, 152 (16.7%) were as or more ambitious than the NEE mid-point, and 663 (72.9%) were less ambitious, with the remainder (94,10.3%) not being covered in the NEE exercise.
+The table below compares the assumptions that schemes have set with those provided by experts as part of the National Expert Opinion Elicitation exercise. The comparisons are made at the mid-point of the uncertainty intervals in both cases, indicating, on average, whether schemes were more or less ambitious than experts' opinions.
+
+It indicates that, across all parameter selections, 152 (16.7%) were as or more ambitious than the NEE mid-point, and 663 (72.9%) were less ambitious, with the remainder (94,10.3%) not being covered in the NEE exercise.
 
 ```{r nee_credibility}
 nee_credibility <- dat |> 
@@ -427,18 +433,15 @@ nee_credibility_final |>
   guides(fill = guide_legend(nrow=2))
 ```
 
-### Credibility given baseline cross-section
+## Credibility of scheme assumptions: (2) taking account of scheme position at baseline
 
-When considering the baseline comparison for each mitigator, we calculate the correlation between the schemes' baseline rates and their inputs. We expect that in general the schemes will have chosen more ambitious reductions when their baseline rate is higher, i.e. the higher the baseline value, the lower the input for any particular mitigator. This corresponds to us expecting a negative correlation between the scheme baseline rate and their input.
-
-For each mitigator group, we count the numbers of mitigators whose correlations fall into the following thresholds:
+We might expect that scheme's would set more ambitious activity reduction assumptions when they have comparatively high levels of mitigatable activity at baseline (i.e. a greater opportunity to reduce activity). The chart below indicates the extent of this relationship. For each grouping of mitigatable activity, we count the numbers of parameter inputs whose correlation to scheme baseline position fall into the following thresholds:
 
 -   Strongly negative: less than -2/3
 -   Moderately negative: -2/3 to -1/3
--   Weakly negative: -1/3 to 0
--   Positive: 0 and above
+-   Weakly negative or positive: -1/3 and above
 
-The plot below indicates that across all mitigators, 24 (26.7%) had an (unexpected) positive correlation between the schemes' baseline rates and inputs, 29 (32.2%) had a weakly negative, 29 (32.2%) a moderately negative, and 8 (8.9%) a strongly negative. There were 2 mitigators missing from the baseline data.
+The plot below indicates that across all parameter selections, 53 (58.9%) had a weakly negative or positive correlation to baseline position, 29 (32.2%) a moderately negative, and 8 (8.9%) a strongly negative. There were 2 parameters missing from the baseline data.
 
 ```{r baseline_inputs_cross_section}
 baseline_inputs_cor <- baseline_inputs_data |>
@@ -447,13 +450,11 @@ baseline_inputs_cor <- baseline_inputs_data |>
   summarise(correlation = cor(value_mid, baseline_rate)) |> 
   mutate(correlation_group = case_when(correlation < -2/3 ~ "Strongly negative",
                                        correlation < -1/3 ~ "Moderately negative",
-                                       correlation < 0 ~ "Weakly negative",
-                                       TRUE ~ "Positive"),
+                                       TRUE ~ "Weakly negative or positive"),
          correlation_group = factor(correlation_group, 
                                     levels = c("Strongly negative",
                                                "Moderately negative",
-                                               "Weakly negative",
-                                               "Positive")))
+                                               "Weakly negative or positive")))
 
 baseline_inputs_cor_group <- baseline_inputs_cor |> 
   count(mitigator_group, correlation_group)
@@ -476,8 +477,8 @@ baseline_inputs_cor_final |>
         legend) +
   xlab("Proportion") +
   scale_x_continuous(labels=scales::percent) +
-  labs(title = "Baseline comparison",
-       subtitle = "Correlation between baseline and input") +
+  labs(title = "Baseline credibility",
+       subtitle = "Relationship between scheme assumptions\nand baseline position") +
   NHSRtheme::theme_nhs()+
   theme(axis.title.y = element_blank(),
         axis.text.y = element_text(size=7),
@@ -487,82 +488,131 @@ baseline_inputs_cor_final |>
   guides(fill = guide_legend(nrow=2))
 ```
 
-### Credibility given trust time series
+<!-- ## Credibility given trust time series -->
 
-When considering the trend comparison for each mitigator, we compare the yearly change in the 5 years leading to the schemes' baselines (so currently between 2015-16 and 2019-20 for all) and the implied yearly change from their inputs. Then for each mitigator we calculate the correlation between these two values for all the schemes having selected the mitigator. In this case we might expect a broadly negative correlation given that the more the activity was growing, the more ambitious we would expect the scheme to be, i.e. the lower the input value.
+<!-- When considering the trend comparison for each mitigator, we compare the yearly change in the 5 years leading to the schemes' baselines (so currently between 2015-16 and 2019-20 for all) and the implied yearly change from their inputs. Then for each mitigator we calculate the correlation between these two values for all the schemes having selected the mitigator. In this case we might expect a broadly negative correlation given that the more the activity was growing, the more ambitious we would expect the scheme to be, i.e. the lower the input value. -->
 
-Similarly to the baseline comparison above, for each mitigator group, we count the numbers of mitigators whose correlations fall into the following thresholds:
+<!-- Similarly to the baseline comparison above, for each mitigator group, we count the numbers of mitigators whose correlations fall into the following thresholds: -->
 
--   Strongly negative: less than -2/3
--   Moderately negative: -2/3 to -1/3
--   Weakly negative: -1/3 to 0
--   Positive: 0 and above
+<!-- -   Strongly negative: less than -2/3 -->
 
-The plot below indicates that 30 (34.1%) had a positive correlation between the schemes' yearly trends and input values, 29 (33.0%) had a weakly negative correlation, 19 (21.6%) a moderately negative, and 10 (11.4%) a strongly negative correlation.
+<!-- -   Moderately negative: -2/3 to -1/3 -->
 
-```{r trend_input_correlation}
-baseline_5yr_trends <- historical_mitigators_data |>
-  select(!n) |> 
-  filter(procode %in% nhp_tagged_runs_meta$dataset,
-         fyear %in% c(201516,201920)) |> 
-  tidyr::pivot_wider(names_from = fyear, values_from = rate) |> 
-  mutate(total_relative_change = `201920` / `201516`,
-         annual_relative_change = total_relative_change^(1/5))
+<!-- -   Weakly negative: -1/3 to 0 -->
 
-input_yearly_trends <- dat |> 
-  select(scheme_name, scheme_code, mitigator_group, mitigator_variable, value_mid, year_range) |> 
-  mutate(reduction_pa = (value_mid - 1) / year_range)
+<!-- -   Positive: 0 and above -->
 
-baseline_and_input_trends <- input_yearly_trends |> 
-  left_join(baseline_5yr_trends, 
-            by = c("scheme_code"="procode", "mitigator_variable"="strategy"))
+<!-- The plot below indicates that 30 (34.1%) had a positive correlation between the schemes' yearly trends and input values, 29 (33.0%) had a weakly negative correlation, 19 (21.6%) a moderately negative, and 10 (11.4%) a strongly negative correlation. -->
 
-baseline_and_input_trends_cor <- baseline_and_input_trends |> 
-  filter(!is.na(annual_relative_change), !is.na(reduction_pa)) |> 
-  group_by(mitigator_group, mitigator_variable) |>
-  summarise(correlation=cor(annual_relative_change, reduction_pa)) |> 
-  mutate(correlation_group = case_when(correlation < -2/3 ~ "Strongly negative",
-                                       correlation < -1/3 ~ "Moderately negative",
-                                       correlation < 0 ~ "Weakly negative",
-                                       TRUE ~ "Positive"),
-         correlation_group = factor(correlation_group, 
-                                    levels = c("Strongly negative",
-                                               "Moderately negative",
-                                               "Weakly negative",
-                                               "Positive")))
+<!-- ```{r trend_input_correlation} -->
 
-baseline_and_input_trends_cor_group <- baseline_and_input_trends_cor |> 
-  count(mitigator_group, correlation_group)
+<!-- baseline_5yr_trends <- historical_mitigators_data |> -->
 
-baseline_and_input_trends_cor_total <- baseline_and_input_trends_cor |> 
-  ungroup() |> 
-  count(correlation_group) |> 
-  mutate(mitigator_group="All mitigators")
+<!--   select(!n) |>  -->
 
-baseline_and_input_trends_cor_final <- bind_rows(baseline_and_input_trends_cor_group, baseline_and_input_trends_cor_total)
+<!--   filter(procode %in% nhp_tagged_runs_meta$dataset, -->
 
+<!--          fyear %in% c(201516,201920)) |>  -->
 
-baseline_and_input_trends_cor_final |> 
-  mutate(p = n / sum(n)) |> 
-  ggplot(aes(y=mitigator_group, x=p, fill=correlation_group)) +
-  geom_bar(position = "stack", stat = "identity") +
-  geom_text(aes(label = paste0(n, "\n (", scales::percent(p, accuracy=0.1),")")), position = position_stack(vjust = 0.5), size = 2) +
-  scale_fill_discrete(name = "Correlation strength") +
-  theme(axis.title.y = element_blank(),
-        legend) +
-  xlab("Proportion") +
-  scale_x_continuous(labels=scales::percent) +
-  labs(title = "Historical trend comparison",
-       subtitle = "Correlation between historic trend and input") +
-  NHSRtheme::theme_nhs()+
-  theme(axis.title.y = element_blank(),
-        axis.text.y = element_text(size=7),
-        legend.text = element_text(size=12),
-        plot.title = element_text(size=18),
-        plot.subtitle = element_text(size=12))
-```
+<!--   tidyr::pivot_wider(names_from = fyear, values_from = rate) |>  -->
 
-# Scheme analyses
+<!--   mutate(total_relative_change = `201920` / `201516`, -->
+
+<!--          annual_relative_change = total_relative_change^(1/5)) -->
+
+<!-- input_yearly_trends <- dat |>  -->
+
+<!--   select(scheme_name, scheme_code, mitigator_group, mitigator_variable, value_mid, year_range) |>  -->
+
+<!--   mutate(reduction_pa = (value_mid - 1) / year_range) -->
+
+<!-- baseline_and_input_trends <- input_yearly_trends |>  -->
+
+<!--   left_join(baseline_5yr_trends,  -->
+
+<!--             by = c("scheme_code"="procode", "mitigator_variable"="strategy")) -->
+
+<!-- baseline_and_input_trends_cor <- baseline_and_input_trends |>  -->
+
+<!--   filter(!is.na(annual_relative_change), !is.na(reduction_pa)) |>  -->
+
+<!--   group_by(mitigator_group, mitigator_variable) |> -->
+
+<!--   summarise(correlation=cor(annual_relative_change, reduction_pa)) |>  -->
+
+<!--   mutate(correlation_group = case_when(correlation < -2/3 ~ "Strongly negative", -->
+
+<!--                                        correlation < -1/3 ~ "Moderately negative", -->
+
+<!--                                        correlation < 0 ~ "Weakly negative", -->
+
+<!--                                        TRUE ~ "Positive"), -->
+
+<!--          correlation_group = factor(correlation_group,  -->
+
+<!--                                     levels = c("Strongly negative", -->
+
+<!--                                                "Moderately negative", -->
+
+<!--                                                "Weakly negative", -->
+
+<!--                                                "Positive"))) -->
+
+<!-- baseline_and_input_trends_cor_group <- baseline_and_input_trends_cor |>  -->
+
+<!--   count(mitigator_group, correlation_group) -->
+
+<!-- baseline_and_input_trends_cor_total <- baseline_and_input_trends_cor |>  -->
+
+<!--   ungroup() |>  -->
+
+<!--   count(correlation_group) |>  -->
+
+<!--   mutate(mitigator_group="All mitigators") -->
+
+<!-- baseline_and_input_trends_cor_final <- bind_rows(baseline_and_input_trends_cor_group, baseline_and_input_trends_cor_total) -->
+
+<!-- baseline_and_input_trends_cor_final |>  -->
+
+<!--   mutate(p = n / sum(n)) |>  -->
+
+<!--   ggplot(aes(y=mitigator_group, x=p, fill=correlation_group)) + -->
+
+<!--   geom_bar(position = "stack", stat = "identity") + -->
+
+<!--   geom_text(aes(label = paste0(n, "\n (", scales::percent(p, accuracy=0.1),")")), position = position_stack(vjust = 0.5), size = 2) + -->
+
+<!--   scale_fill_discrete(name = "Correlation strength") + -->
+
+<!--   theme(axis.title.y = element_blank(), -->
+
+<!--         legend) + -->
+
+<!--   xlab("Proportion") + -->
+
+<!--   scale_x_continuous(labels=scales::percent) + -->
+
+<!--   labs(title = "Historical trend comparison", -->
+
+<!--        subtitle = "Correlation between historic trend and input") + -->
+
+<!--   NHSRtheme::theme_nhs()+ -->
+
+<!--   theme(axis.title.y = element_blank(), -->
+
+<!--         axis.text.y = element_text(size=7), -->
+
+<!--         legend.text = element_text(size=12), -->
+
+<!--         plot.title = element_text(size=18), -->
+
+<!--         plot.subtitle = element_text(size=12)) + -->
+
+<!--   guides(fill = guide_legend(nrow=2)) -->
+
+<!-- ``` -->
+
+# Scheme-level analyses
 
 Below we present scheme-level analyses. The schemes taking part in the roundtable on 27th September 2024 are highlighted as follows:
 
@@ -584,11 +634,9 @@ highlight_schemes_2024_09_27 <- function(data) {
 
 ```
 
-## Summary
+## How many parameter set compared to other participating schemes
 
-### How many parameter set compared to other participating schemes
-
-Below we can see the number of mitigators that each scheme has selected in descending order.
+Below we can see the number of parameters that each scheme has selected in descending order.
 
 ```{r mitigator_coverage_by_scheme}
 mitigator_coverage_by_scheme <- dat |> 
@@ -603,16 +651,16 @@ mitigator_coverage_by_scheme |>
   geom_text(aes(x = n, y = reorder(scheme_name, n), label = n), 
             position = position_stack(vjust = 0.5)) +
   scale_fill_identity() +
-  ggtitle("Mitigator coverage by scheme") + 
-  xlab("Number of mitigators") +
+  ggtitle("Parameter coverage") + 
+  xlab("Number of parameters selected") +
   theme(axis.title.y = element_blank()) +
   NHSRtheme::theme_nhs()
   
 ```
 
-### More or less ambitious than other participating trusts (average over all mitigators)
+## More or less ambitious than other participating schemes (average over all parameters)
 
-Below, for each scheme, we can see the average ambition over its selected mitigators in descending order. Note that the lower the number, the more ambitious the given scheme has been in its selections given that the ambition is a reduction in the activity in scope of the mitigators.
+Below, for each scheme, we can see the average ambition over its selected parameters in descending order. Note that the lower the number, the more ambitious the given scheme has been in its selections given that the ambition is a reduction in the activity in scope of the parameters.
 
 ```{r mitigator_ambition_by_scheme}
 mitigator_ambition_by_scheme <- dat |> 
@@ -628,15 +676,19 @@ mitigator_ambition_by_scheme |>
   scale_fill_identity() +
   geom_text(aes(x = average_ambition, y = reorder(scheme_name, average_ambition), label = round(average_ambition,2)), 
             position = position_stack(vjust = 0.5)) +
-  ggtitle("Mitigator ambition by scheme") + 
-  xlab("Average mitigator mid-point") +
+  ggtitle("Parameter ambition") + 
+  xlab("Average parameter mid-point") +
   theme(axis.title.y = element_blank()) +
-  NHSRtheme::theme_nhs()
+  NHSRtheme::theme_nhs() +
+  # Add the vertical label "Increasing ambition" and the arrow
+  annotate("text", x = 1.0, y = n_schemes / 2, label = "Increasing ambition", angle = 90, vjust = 1) + 
+  annotate("segment", x = 1.0, y = 0, yend = n_schemes, 
+           arrow = arrow(length = unit(0.2, "cm")))
 ```
 
-### More or less certain than other participating trusts (average over all mitigators)
+## More or less certain than other participating schemes (average over all parameters)
 
-Below we can see the average mitigator certainty by scheme. This is calculated as the average range between the p10 and p90 provided for mitigators. This is presented in descending order of certainty, i.e. ascending order of average range.
+Below we can see the average parameter certainty by scheme. This is calculated as the average range between the p10 and p90 provided for parameters. This is presented in descending order of certainty, i.e. ascending order of average range.
 
 ```{r mitigator_certainty_by_scheme}
 mitigator_certainty_by_scheme <- dat |> 
@@ -652,13 +704,17 @@ mitigator_certainty_by_scheme |>
   scale_fill_identity() +
   geom_text(aes(x = average_range, y = reorder(scheme_name, average_range), label = round(average_range,2)), 
             position = position_stack(vjust = 0.5)) +
-  ggtitle("Mitigator certainty by scheme") + 
-  xlab("Average mitigator input range") +
+  ggtitle("Parameter certainty") + 
+  xlab("Average parameter input range") +
   theme(axis.title.y = element_blank()) +
-  NHSRtheme::theme_nhs()
+  NHSRtheme::theme_nhs() +
+  # Add the vertical label "Increasing ambition" and the arrow
+  annotate("text", x = 0.23, y = n_schemes / 2, label = "Increasing certainty", angle = 90, vjust = 1) + 
+  annotate("segment", x = 0.23, y = 0, yend = n_schemes, 
+           arrow = arrow(length = unit(0.2, "cm")))
 ```
 
-### More of less ambitious than NEE (average over all mitigators)
+## More or less ambitious than NEE (proportion over all parameter assumptions)
 
 Below we can see proportion of each scheme's inputs that are as or more ambitious than the NEE value for that scheme. This is presented in descending order.
 
@@ -680,40 +736,40 @@ nee_comparison_by_scheme |>
            stat="identity", 
            position = "dodge") +
   scale_fill_identity() +
-  ggtitle("NEE comparison by scheme") + 
+  ggtitle("NEE comparison") + 
   geom_text(aes(x = p, y = reorder(scheme_name, p), label = scales::percent(p,0.1)), 
             position = position_stack(vjust = 0.5)) +
-  xlab("Proportion of mitigators as or more ambitious than NEE") +
+  xlab("Proportion of parameters as or more ambitious than NEE") +
   theme(axis.title.y = element_blank()) +
   scale_x_continuous(labels = scales::percent)+
   NHSRtheme::theme_nhs()
 ```
 
-## Outlier parameters
+## Notable scheme assumptions
 
-### Parameters that other trusts have set but they haven't
+### Potentially missed opportunities to set activity mitigation assumptions
 
 ```{r missing_mitigators_by_lookup}
 source("missing_mitigators_by_scheme.R")
 ```
 
-All `r nrow(mitigator_lookup)` mitigators were selected at least once by a scheme. The following tables indicate unselected mitigators for Hinchingbrooke, King's Lynn, West Suffolk, and James Paget. We have filtered this to where at least half of the total `r n_schemes` have selected the mitigator.
+All `r nrow(mitigator_lookup)` parameters were selected at least once by a scheme. The following table indicate unselected parameters for Hinchingbrooke, King's Lynn, West Suffolk, and James Paget. We have filtered this to where at least half of the total `r n_schemes` have selected the parameter.
 
 ```{r unset_parameters}
 missing_mitigators_by_scheme |> 
   filter(scheme_code %in% c("RGN", "RCX", "RGR", "RGP"), 
          total_incidence >= n_schemes / 2) |> 
   select(!scheme_code) |> 
-  knitr::kable(caption = "Mitigators not selected for each scheme",
+  knitr::kable(caption = "Unused paramters by scheme",
                col.names = c("Scheme",
-                             "Mitigator group",
-                             "Mitigator",
+                             "Mitigatable activity group",
+                             "Parameter",
                              "Incidence amongst other schemes"))
 ```
 
-### Parameter values that are more than 2 sds difference any of the assessments above
+### Particularly ambitious scheme assumptions
 
-The following table indicates the parameters set by the four schemes that were signficantly more ambitious than their other inputs. For a given scheme, we define this as a being more than 1.96 standard deviations away from the mean of its inputs.
+The following table indicates the parameters set by the four schemes that were significantly more ambitious than their other inputs. For a given scheme, we define this as a being more than 1.96 standard deviations away from the mean of its inputs.
 
 ```{r scheme_outliers}
 outlier_mitigators_by_scheme <- dat |>
@@ -728,7 +784,7 @@ outlier_mitigators_by_scheme |>
   filter(scheme_code %in% c("RGN", "RCX", "RGR", "RGP")) |>
   select(-scheme_code) |> 
   knitr::kable(captions = "Significantly more ambitious parameters by scheme",
-               col.names = c("Scheme", "Mitigator group", "Mitigator", "Mid-point", "Avg mitigator mid-point", "Standard deviation of mitigators"))
+               col.names = c("Scheme", "Mitigatable activity group", "Parameter", "Mid-point", "Scheme's average parameter mid-point", "Standard deviation of schemes' parameters"))
   
 ```
 
@@ -751,19 +807,19 @@ outlier_mitigators_by_scheme |>
 
 There are three broad data sources used in this analysis:
 
--   **Scheme inputs from the NHP D&C model** -- this includes one row per mitigator and scheme (**909** total combinations), with information on the p10, p90 and mid-point for that particular mitigator as well as the baseline and horizon year.
--   **NEE results** -- this provides information on the average p10 and p90 selected by subject matter experts as part of the NEE exercise for the **78** mitigators included.
--   **Scheme historical activity rates** -- this provides the rates of activity falling in scope of mitigators by scheme, financial year (from 2008-09 to 2022-23), and **90** mitigators.
+-   **Scheme inputs from the Demand and Activity Model** -- this includes one row per parameter and scheme (**909** total combinations), with information on the p10, p90 and mid-point for that particular parameter as well as the baseline and horizon year.
+-   **NEE results** -- this provides information on the average p10 and p90 selected by subject matter experts as part of the NEE exercise for the **78** parameter included.
+-   **Scheme historical activity rates** -- this provides the rates of activity falling in scope of parameter by scheme, financial year (from 2008-09 to 2022-23), and **90** parameters.
 
 ### National expert elicitation exercise
 
-The NEE exercise was conducted in the autumn of 2023 as a way of gathering subject matter experts' (SMEs) views on the likely values that parameters in the NHP D&C model would take in the future at an England level. For example, SMEs might have indicated what they believed would be the impact of healthy life expectancy on hospital activity in the future.
+The NEE exercise was conducted in the autumn of 2023 as a way of gathering subject matter experts' (SMEs) views on the likely values that parameters in the Demand and Activity Model would take in the future at an England level. For example, SMEs might have indicated what they believed would be the impact of healthy life expectancy on hospital activity in the future.
 
 The values provided by SMEs took the form of the the 10th and 90th percentiles (commonly known as the p10-p90 or 80% interval).
 
 Efforts were taken to ensure that the SMEs' predictions were free from cognitive biases such as anchoring, availability, and representativeness, groupthink, overconfidence, and difficulties associated with communicating knowledge in numbers and probabilities.
 
-The NEE exercise is considered pertinent to our analysis as for most of the mitigators that have been set locally (78 out of 92), it provides a national-level view on which to consider the relative ambition that schemes have shown.
+The NEE exercise is considered pertinent to our analysis as for most of the parameters that have been set locally (78 out of 92), it provides a national-level view on which to consider the relative ambition that schemes have shown.
 
 ## Model horizons
 
@@ -773,22 +829,22 @@ With one exception, this has not been controlled for: when considering the relat
 
 ## Assessment methodology
 
-The table below outlines how our counts are calculated for each area of analysis. We have separate aggregations for the analysis by mitigator and the analysis by scheme. The mitigator-level analyses are presented over mitigator groups given there are 92 individual mitigators.
+The table below outlines how our counts are calculated for each area of analysis. We have separate aggregations for the analysis by parameter and the analysis by scheme. The parameter-level analyses are presented over mitigatable activity group given there are 92 individual parameters.
 
-+----------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------+
-| **Area of analysis**                   | Mitigator aggregation (summarised by mitigator group)                                                                                                                                                   | Scheme aggregation                                  |
-+========================================+=========================================================================================================================================================================================================+=====================================================+
-| **Coverage**                           | \# times mitigator selected by scheme                                                                                                                                                                   | \# mitigators selected by scheme                    |
-+----------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------+
-| **Relative ambition**                  | \# mitigator central values falling into low (\<10% reduction), medium (10% to 50% reduction), high ambition (50%+ reduction)                                                                           | avg of scheme's mitigator mid-points                |
-+----------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------+
-| **Relative certainty**                 | \# mitigator ranges falling into low (range of 0.15+), medium (range between 0.05 and 0.15) , high certainty (range less than 0.05)                                                                     | avg of scheme's mitigator ranges                    |
-+----------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------+
-| **NEE credibility**                    | \# mitigator central values less than or equal to NEE mid-point vs more than NEE mid-point                                                                                                              | avg difference scheme's mid-point and NEE mid-point |
-+----------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------+
-| **Credibility given baseline**         | \# mitigators whose correlation between scheme baseline and input (over all schemes) falls into strongly negative (\<-2/3), medium (-2/3 to -1/3), weak (-1/3 to 0), unexpected (positive)              | \[to be decided\]                                   |
-+----------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------+
-| **Credibility given historical rates** | \# mitigators whose correlation between scheme historic 5-year trend and input (over all schemes) falls into strongly negative (\<-2/3), medium (-2/3 to -1/3), weak (-1/3 to 0), unexpected (positive) | \[to be decided\]                                   |
-+----------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------+
++----------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------+
+| **Area of analysis**                   | Parameter aggregation                                                                                                                                                                      | Scheme aggregation                                  |
++========================================+============================================================================================================================================================================================+=====================================================+
+| **Coverage**                           | \# times parameter selected by scheme                                                                                                                                                      | \# parameters selected by scheme                    |
++----------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------+
+| **Relative ambition**                  | \# parameter central values falling into low (\<10% reduction), medium (10% to 50% reduction), high ambition (50%+ reduction)                                                              | avg of scheme's parameter mid-points                |
++----------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------+
+| **Relative certainty**                 | \# parameter ranges falling into low (range of 0.15+), medium (range between 0.05 and 0.15) , high certainty (range less than 0.05)                                                        | avg of scheme's parameter ranges                    |
++----------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------+
+| **NEE credibility**                    | \# parameter central values less than or equal to NEE mid-point vs more than NEE mid-point                                                                                                 | avg difference scheme's mid-point and NEE mid-point |
++----------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------+
+| **Credibility given baseline**         | \# parameters whose correlation between scheme baseline and input (over all schemes) falls into strongly negative (\<-2/3), medium (-2/3 to -1/3), weak (-1/3 to 0), unexpected (positive) | \[to be decided\]                                   |
++----------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------+
+| **Credibility given historical rates** | \[to be decided\]                                                                                                                                                                          | \[to be decided\]                                   |
++----------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------+
 
 : Methodology for summary statistics
