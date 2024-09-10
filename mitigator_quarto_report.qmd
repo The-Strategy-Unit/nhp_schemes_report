@@ -1,5 +1,6 @@
 ---
-title: "mitigator report"
+title: "Review of NHP scheme assumptions to reduce mitigatable activity"
+author: "Gabriel Hobro"
 date: today
 format: 
   html:
