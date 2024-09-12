@@ -1,7 +1,8 @@
 ---
 title: "Review of NHP scheme assumptions to reduce mitigatable activity"
-subtitle: "For roundtable discussion with Leighton and Frimley"
+# subtitle: "For roundtable discussion with Leighton and Frimley"
 # subtitle: "For roundtable discussion with Hinchingbrooke, James Paget, West Suffolk and King's Lynn"
+subtitle: "For roundtable discussion with Hillingdon"
 author: "Gabriel Hobro"
 date: today
 format: 
@@ -623,24 +624,33 @@ baseline_inputs_cor_final |>
 
 Below we present scheme-level analyses. The schemes taking part in the roundtable on 27th September 2024 are highlighted as follows:
 
--   Frimley -- blue
--   Leighton -- green
+<!-- -   Frimley -- blue -->
+
+<!-- -   Leighton -- green -->
 
 <!-- -   Hinchingbrooke -- blue -->
+
 <!-- -   King's Lynn -- green -->
+
 <!-- -   West Suffolk -- red -->
+
 <!-- -   James Paget -- purple -->
+
+Hillingdon - blue
 
 ```{r highlight_schemes_2024_09_27}
 highlight_schemes_2024_09_27 <- function(data) {
   data |> 
     mutate(color_fill = case_when(
-      scheme_code == "RDU" ~ "blue",
-      scheme_code == "RBT" ~ "green",
+      # scheme_code == "RDU" ~ "blue",
+      # scheme_code == "RBT" ~ "green",
+      
       # scheme_code == "RGN" ~ "blue",
       # scheme_code == "RCX" ~ "green",
       # scheme_code == "RGR" ~ "red",
       # scheme_code == "RGP" ~ "purple",
+      
+      scheme_code == "RAS" ~ "blue",
       TRUE ~ "grey"))
 }
 
@@ -652,13 +662,13 @@ For added context, we present excerpts from the schemes' output reports for figu
 
 We also compare a subset of the analysis from section 9 containing compound annual growth rates (CAGRs) from BAU shifts.
 
-Please note there is currently no completed report for Leighton.
+<!-- Please note there is currently no completed report for Leighton. -->
 
 ### 8.1 Total impact of mitigation strategies
 
-**Frimley**
+<!-- **Frimley** -->
 
-![](scheme_output_reports/images/frimley_8_1.png)
+<!-- ![](scheme_output_reports/images/frimley_8_1.png) -->
 
 <!-- **Hinchingbrooke** -->
 
@@ -676,11 +686,15 @@ Please note there is currently no completed report for Leighton.
 
 <!-- ![](scheme_output_reports/images/west_suffolk_8_1.png) -->
 
+**Hillingdon**
+
+![](scheme_output_reports/images/hillingdon_8_1.png)
+
 ### 8.2 Top parameters for admission avoidance
 
-**Frimley**
+<!-- **Frimley** -->
 
-![](scheme_output_reports/images/frimley_8_2.png)
+<!-- ![](scheme_output_reports/images/frimley_8_2.png) -->
 
 <!-- **Hinchingbrooke** -->
 
@@ -698,11 +712,15 @@ Please note there is currently no completed report for Leighton.
 
 <!-- ![](scheme_output_reports/images/west_suffolk_8_2.png) -->
 
+**Hillingdon**
+
+![](scheme_output_reports/images/hillingdon_8_2.png)
+
 ### 8.3 Top parameters for reduced bed days due to avoidance
 
-**Frimley**
+<!-- **Frimley** -->
 
-![](scheme_output_reports/images/frimley_8_3.png)
+<!-- ![](scheme_output_reports/images/frimley_8_3.png) -->
 
 <!-- **Hinchingbrooke** -->
 
@@ -720,11 +738,15 @@ Please note there is currently no completed report for Leighton.
 
 <!-- ![](scheme_output_reports/images/west_suffolk_8_3.png) -->
 
+**Hillingdon**
+
+![](scheme_output_reports/images/hillingdon_8_3.png)
+
 ### 8.4 Top parameters for reduced bed days due to efficiencies
 
-**Frimley**
+<!-- **Frimley** -->
 
-![](scheme_output_reports/images/frimley_8_4.png)
+<!-- ![](scheme_output_reports/images/frimley_8_4.png) -->
 
 <!-- **Hinchingbrooke** -->
 
@@ -742,15 +764,25 @@ Please note there is currently no completed report for Leighton.
 
 <!-- ![](scheme_output_reports/images/west_suffolk_8_4.png) -->
 
+**Hillingdon**
+
+![](scheme_output_reports/images/hillingdon_8_4.png)
+
 ### 9. Compound annual growth rates from BAU shifts
 
-+---------+----------------------------------------------------------------------------------------------------------------+------------+----------+
-| Scheme  | Term                                                                                                           | Admissions | Bed days |
-+=========+================================================================================================================+============+==========+
-| Frimley | Assumed BAU Shifts in Care / Prevention etc (Netting off Against Gross Growth)                                 | -0.2%      | -0.32%   |
-+---------+----------------------------------------------------------------------------------------------------------------+------------+----------+
-| Frimley | Assumed BAU Productivity (Length of Stay Reductions) PLUS Additional NHP Specific Productivity Gain on opening | NA         | -0.9%    |
-+---------+----------------------------------------------------------------------------------------------------------------+------------+----------+
+<!-- +---------+----------------------------------------------------------------------------------------------------------------+------------+----------+ -->
+
+<!-- | Scheme  | Term                                                                                                           | Admissions | Bed days | -->
+
+<!-- +=========+================================================================================================================+============+==========+ -->
+
+<!-- | Frimley | Assumed BAU Shifts in Care / Prevention etc (Netting off Against Gross Growth)                                 | -0.2%      | -0.32%   | -->
+
+<!-- +---------+----------------------------------------------------------------------------------------------------------------+------------+----------+ -->
+
+<!-- | Frimley | Assumed BAU Productivity (Length of Stay Reductions) PLUS Additional NHP Specific Productivity Gain on opening | NA         | -0.9%    | -->
+
+<!-- +---------+----------------------------------------------------------------------------------------------------------------+------------+----------+ -->
 
 <!-- +----------------+----------------------------------------------------------------------------------------------------------------+------------+----------+ -->
 <!-- | Scheme         | Term                                                                                                           | Admissions | Bed days | -->
@@ -771,6 +803,14 @@ Please note there is currently no completed report for Leighton.
 <!-- +----------------+----------------------------------------------------------------------------------------------------------------+------------+----------+ -->
 <!-- | West Suffolk   | Assumed BAU Productivity (Length of Stay Reductions) PLUS Additional NHP Specific Productivity Gain on opening | NA         | -0.9%    | -->
 <!-- +----------------+----------------------------------------------------------------------------------------------------------------+------------+----------+ -->
+
++------------+----------------------------------------------------------------------------------------------------------------+------------+----------+
+| Scheme     | Term                                                                                                           | Admissions | Bed days |
++============+================================================================================================================+============+==========+
+| Hillingdon | Assumed BAU Shifts in Care / Prevention etc (Netting off Against Gross Growth)                                 | -0.27%     | -0.31%   |
++------------+----------------------------------------------------------------------------------------------------------------+------------+----------+
+| Hillingdon | Assumed BAU Productivity (Length of Stay Reductions) PLUS Additional NHP Specific Productivity Gain on opening | NA         | -1.3%    |
++------------+----------------------------------------------------------------------------------------------------------------+------------+----------+
 
 ## How many parameter set compared to other participating schemes
 
@@ -891,18 +931,24 @@ nee_comparison_by_scheme |>
 source("missing_mitigators_by_scheme.R")
 ```
 
-All `r nrow(mitigator_lookup)` parameters were selected at least once by a scheme. 
+All `r nrow(mitigator_lookup)` parameters were selected at least once by a scheme.
 
-The following table indicate unselected parameters for Leighton and Frimley. We have filtered this to where at least half of the total `r n_schemes` have selected the parameter.
+<!-- The following table indicate unselected parameters for Leighton and Frimley. We have filtered this to where at least half of the total `r n_schemes` have selected the parameter. -->
 
 <!-- The following table indicate unselected parameters for Hinchingbrooke, King's Lynn, West Suffolk, and James Paget. We have filtered this to where at least half of the total `r n_schemes` have selected the parameter. -->
 
+The following table indicate unselected parameters for Hillingdon. We have filtered this to where at least half of the total `r n_schemes` have selected the parameter.
+
 ```{r unset_parameters}
 missing_mitigators_by_scheme |> 
-  filter(scheme_code %in% c("RDU", "RBT"),
+  # filter(scheme_code %in% c("RDU", "RBT"),
+  #        total_incidence >= n_schemes / 2) |>
+  
+  # filter(scheme_code %in% c("RGN", "RCX", "RGR", "RGP"),
+  #        total_incidence >= n_schemes / 2) |>
+  
+  filter(scheme_code == "RAS",
          total_incidence >= n_schemes / 2) |>
-  # filter(scheme_code %in% c("RGN", "RCX", "RGR", "RGP"), 
-  #        total_incidence >= n_schemes / 2) |> 
   arrange(scheme_code, desc(total_incidence)) |>
   select(!scheme_code) |>
   gt::gt() |> 
@@ -916,7 +962,11 @@ missing_mitigators_by_scheme |>
 
 ### Particularly ambitious scheme assumptions
 
-The following table indicates the parameters set by the four schemes that were significantly more ambitious than their other inputs. For a given scheme, we define this as a being more than 1.96 standard deviations away from the mean of its inputs.
+<!-- The following table indicates the parameters set by the two schemes that were significantly more ambitious than their other inputs. For a given scheme, we define this as a being more than 1.96 standard deviations away from the mean of its inputs. -->
+
+<!-- The following table indicates the parameters set by the four schemes that were significantly more ambitious than their other inputs. For a given scheme, we define this as a being more than 1.96 standard deviations away from the mean of its inputs. -->
+
+The following table indicates the parameters set by Hillingdon that were significantly more ambitious than their other inputs. For a given scheme, we define this as a being more than 1.96 standard deviations away from the mean of its inputs.
 
 ```{r scheme_outliers}
 outlier_mitigators_by_scheme <- dat |>
@@ -928,8 +978,9 @@ outlier_mitigators_by_scheme <- dat |>
   select(scheme_code,scheme_name,mitigator_group, mitigator_name, value_mid, mean_value, sd)
 
 outlier_mitigators_by_scheme |> 
-  filter(scheme_code %in% c("RDU", "RBT")) |>
+  # filter(scheme_code %in% c("RDU", "RBT")) |>
   # filter(scheme_code %in% c("RGN", "RCX", "RGR", "RGP")) |>
+  filter(scheme_code == "RAS") |> 
   select(-scheme_code) |> 
   gt::gt() |> 
   gt::tab_header("Significantly more ambitious parameters by scheme") |> 
@@ -948,28 +999,24 @@ outlier_mitigators_by_scheme |>
 
 ### Parameter coverage
 
--   Across mitigatable activity groups, coverage of parameters ranges from 51.8% (*Emergency department and acute medicine activity*) to 58.4% (*Planned medical activity (adult)*).
--   Both Frimley and Leighton have selected amongst the fewest parameters of all schemes (34 and 25, respectively). This contrasts to PAH and Hinchingbrooke which have both selected 84.
-<!-- -   Hinchingbrooke has selected the joint most parameters (84) of all schemes. West Suffolk has selected the least of the four schemes (58) but is still in the middle position of all schemes (9th out of 17). -->
+-   Across mitigatable activity groups, coverage of parameters ranges from 51.8% (*Emergency department and acute medicine activity*) to 58.4% (*Planned medical activity (adult)*). <!-- -   Both Frimley and Leighton have selected amongst the fewest parameters of all schemes (34 and 25, respectively). This contrasts to PAH and Hinchingbrooke which have both selected 84. --> <!-- -   Hinchingbrooke has selected the joint most parameters (84) of all schemes. West Suffolk has selected the least of the four schemes (58) but is still in the middle position of all schemes (9th out of 17). -->
+-   Hillingdon has selected the 6th fewest parameters of all schemes, having selected 35 of the 92 parameters. This compares to 84 that both Hinchingbrooke and PAH have set.
 
 ### Parameter ambition
 
--   *Planned surgical activity (adult)* contains the largest proportion of high ambition assumptions (52, 21.0%), whilst *Hospital activity amenable to psychiatric liaison and community psychiatry* contains the largest proportion of low ambition assumptions (18, 47.4%).
--   Leighton’s average ambition amongst its parameters is in the top half of all schemes at 0.81 whilst Frimley has the fourth lowest ambition of all schemes at 0.9.
-<!-- -   We can see that the four schemes' ambition ranges between 0.91 (West Suffolk) and 0.76 (James Paget). these all fall in the range of average ambitions shown by all schemes (0.96 to 0.66). -->
+-   *Planned surgical activity (adult)* contains the largest proportion of high ambition assumptions (52, 21.0%), whilst *Hospital activity amenable to psychiatric liaison and community psychiatry* contains the largest proportion of low ambition assumptions (18, 47.4%). <!-- -   Leighton’s average ambition amongst its parameters is in the top half of all schemes at 0.81 whilst Frimley has the fourth lowest ambition of all schemes at 0.9. --> <!-- -   We can see that the four schemes' ambition ranges between 0.91 (West Suffolk) and 0.76 (James Paget). these all fall in the range of average ambitions shown by all schemes (0.96 to 0.66). -->
+-   Hillingdon has the most ambitious average parameter input at 0.66. The next highest is Watford at 0.75.
 
 ### Parameter certainty
 
--   The grouping with the largest proportion of high certainty assumptions is *Planned medical activity (adult)* (17, 34.0%) whilst the one with largest proportion of low certainty assumptions is *Emergency department and acute medicine activity* (78, 44.3%)
--   Frimley and Leighton are near opposite ends of the schemes in terms of their average uncertainty range, with Frimley having an average interval width of 0.06 and Leighton 0.16.
-<!-- -   James Paget has shown the largest average uncertainty range in its selections (0.22) of all schemes, with the remaining three schemes being around the middle of all schemes and close clustered to one another (0.11 to 0.14) -->
+-   The grouping with the largest proportion of high certainty assumptions is *Planned medical activity (adult)* (17, 34.0%) whilst the one with largest proportion of low certainty assumptions is *Emergency department and acute medicine activity* (78, 44.3%) <!-- -   Frimley and Leighton are near opposite ends of the schemes in terms of their average uncertainty range, with Frimley having an average interval width of 0.06 and Leighton 0.16. --> <!-- -   James Paget has shown the largest average uncertainty range in its selections (0.22) of all schemes, with the remaining three schemes being around the middle of all schemes and close clustered to one another (0.11 to 0.14) -->
+-   Hillingon has the 7th highest certainty in its inputs, with an average range of 0.11
 
 ### NEE credibility
 
 -   A large majority (72.9%) of all assumptions across all schemes are less ambitious than the NEE mid-point, with only 16.7% being as or more ambitious.
--   For each individual scheme that has model runs, a minority of its selections are as or more ambitious
--   Frimley has the lowest proportion of its parameters meeting or exceeding NEE ambition of all schemes at only 2.9%, whilst Leighton is more middling with 20.0%.
-<!-- -   Of the four schemes, James Paget has the largest proportion inputs that are as or more ambitious (28.8%), whilst West Suffolk has the smallest (3.4%) -->
+-   For each individual scheme that has model runs, a minority of its selections are as or more ambitious <!-- -   Frimley has the lowest proportion of its parameters meeting or exceeding NEE ambition of all schemes at only 2.9%, whilst Leighton is more middling with 20.0%. --> <!-- -   Of the four schemes, James Paget has the largest proportion inputs that are as or more ambitious (28.8%), whilst West Suffolk has the smallest (3.4%) -->
+-   Hillingdon has the third highest proportion (34.3%) parameter inputs whose mid-points meet or exceed the ambition of the NEE mid-point.
 
 ### Baseline credibility
 
@@ -978,10 +1025,17 @@ outlier_mitigators_by_scheme |>
 
 ### Notable scheme assumptions:
 
--   Leighton has 42 unselected parameters which were used by at least half of all schemes, with some of these having been used by nearly all the schemes, e.g. Outpatient Convert to Tele-Attendance (Adult, Non-Surgical) was used by 15 schemes and Emergency Admission of Older People by 14. Frimley has 39, with, for example, Outpatient Followup Appointment Reduction (Children, Surgical) having been used by 14 of the 17 schemes.
--   Both schemes have two particularly ambitious parameters: for Frimley, these both come from Planned medical activity (adult) grouping, and for Leighton, from the Planned surgical activity (adult) grouping.
+<!-- -   Leighton has 42 unselected parameters which were used by at least half of all schemes, with some of these having been used by nearly all the schemes, e.g. Outpatient Convert to Tele-Attendance (Adult, Non-Surgical) was used by 15 schemes and Emergency Admission of Older People by 14. Frimley has 39, with, for example, Outpatient Followup Appointment Reduction (Children, Surgical) having been used by 14 of the 17 schemes. -->
+
+<!-- -   Both schemes have two particularly ambitious parameters: for Frimley, these both come from Planned medical activity (adult) grouping, and for Leighton, from the Planned surgical activity (adult) grouping. -->
+
 <!-- -   West Suffolk has 16 unselected parameters which were used by at least half of all the schemes -->
+
 <!-- -   Hinchingbrooke has selected 2 parameters where their expectation is a 100% reduction in the associated activity -->
+
+-   Hillingdon has 34 unselected parameters which were used by at least half of all schemes, with *Frail Elderly Admissions (Intermediate Frailty Risk)* having been selected by all 16 of the other schemes
+-   It has 5 parameters whose inputs are signficantly more ambitious than its average. Each of these is set at 0.005, i.e. a 99.5% reduction.
+-   
 
 ## Limitations / issues to note
 
