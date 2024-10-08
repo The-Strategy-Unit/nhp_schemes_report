@@ -3,4 +3,11 @@
 .RData
 .Ruserdata
 data/*
+images/*
 *.html
+*.pdf
+*.docx
+*.csv
+*.xlsx
+output images (drafts)/*
+scheme_output_reports/*
