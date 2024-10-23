@@ -42,7 +42,7 @@ trust_code_lookup <- read.csv(
 # load the functions which are defined for the app developed by Data Science team
 # https://github.com/The-Strategy-Unit/nhp_inputs_report_app/blob/main/R/fct_tabulate.R
 
-source("fct tabulate.R")
+source("R/fct tabulate.R")
 
 # derive the cleaned data frame (same as that being used for Shiny app)
 extracted_params <- extract_params(nhp_tagged_runs_params, nhp_tagged_runs_meta)
