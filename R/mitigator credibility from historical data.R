@@ -3,6 +3,7 @@ library(dplyr)
 library(ggplot2)
 library(ggrepel)
 library(stringr)
+library(purrr)
 # Loading data ------------------------------------------------------------
 
 # establish a connection to the board containing the data
@@ -107,6 +108,45 @@ baseline_inputs_data <- left_join(dat, baseline,
                                   by = c("scheme_code" = "procode",
                                          "mitigator_variable" = "strategy"))
 
+# wrangling baseline metadata ---------------------------------------------
+
+# load in the yaml
+yaml <- yaml::read_yaml(
+  "data/golem-config.yml"
+)
+
+# Abbreviate the path to the mitigators_config list
+mitigator_yaml <- yaml$default$mitigators_config
+
+# Use purrr to map over the list of categories and create the data frame
+mitigator_yaml_df <- map_df(names(mitigator_yaml), function(category_name) {
+  
+  # Extract the relevant components for each category
+  activity_type <- mitigator_yaml[[category_name]]$activity_type
+  mitigator_type <- mitigator_yaml[[category_name]]$mitigators_type
+  strategy_variable <- names(mitigator_yaml[[category_name]]$strategy_subset)
+  y_axis_title <- mitigator_yaml[[category_name]]$y_axis_title
+  
+  # Return a data frame with category, element, and y_axis_title
+  tibble(
+    activity_type = activity_type,
+    mitigator_type = mitigator_type,
+    category = category_name,
+    strategy_variable = strategy_variable,
+    y_axis_title = y_axis_title
+  )
+})
+
+# join the yaml data onto the baseline / inputs data
+baseline_inputs_data <- baseline_inputs_data |> 
+  left_join(
+    select(mitigator_yaml_df, 
+           strategy_variable, 
+           category, 
+           y_axis_title), 
+    by = c("mitigator_variable" = "strategy_variable"))
+
+
 # Function for scatter plot -----------------------------------------------
 
 # this function will create a scatter plot comparing the schemes' baseline values
@@ -117,28 +157,39 @@ baseline_inputs_data <- left_join(dat, baseline,
 
 # furthermore, it labels the four quadrants resulting from these two divider
 # lines in a way that explains the data, e.g. "high baseline value, large reduction"
-baseline_comparison_plot <- function(strategy) {
+baseline_comparison_plot <- function(strategy, scheme) {
   # create the plot data, i.e. filtering to specific strategy and removing the NAs
   plot_data = baseline_inputs_data |> 
     filter(mitigator_variable == strategy,
-           !is.na(value_mid))
+           !is.na(value_mid)) |> 
+    # highlight the specific scheme
+    mutate(colour_fill = if_else(scheme_code == scheme, 
+                                "blue",
+                                "grey"))
   
   # Add vertical and horizontal lines to divide the plot into quadrants based on means
   average_input = mean(plot_data$value_mid)
   average_baseline_rate = mean(plot_data$baseline_rate) 
   
+  # Get the x-axis title
+  x_label = plot_data$y_axis_title[[1]]
+  
   # create the plot
   plot = ggplot(plot_data, aes(x = baseline_rate, y = value_mid)) +
-    geom_point() +
+    # use the colour_fill field to highlight the specific scheme
+    geom_point(aes(colour = colour_fill)) +
     geom_smooth(method = "lm", se=FALSE) +
     ylab("scheme inputs midpoint (% of baseline)") +
-    xlab("scheme baseline rate") +
+    xlab(paste0("Baseline: ", x_label)) +
     labs(title = "scatter plot comparison of scheme baseline values and inputs",
          subtitle = paste(strategy)) +
-    geom_text_repel(aes(label = scheme_code), size = 4) +
+    geom_text_repel(aes(label = scheme_code, colour = colour_fill), size = 4) +
     # Add vertical and horizontal lines to divide the plot into quadrants based on means
     geom_hline(yintercept = average_input, linetype = "dashed") +
-    geom_vline(xintercept = average_baseline_rate, linetype = "dashed") 
+    geom_vline(xintercept = average_baseline_rate, linetype = "dashed") +
+    # get the colours from the value of the colour_fill column
+    scale_colour_identity()
+    
   
   # Get the limits of the plot
   plot_limits <- ggplot_build(plot)$layout$panel_params[[1]]
@@ -160,7 +211,7 @@ baseline_comparison_plot <- function(strategy) {
 
 # producing a plot
 
-baseline_vs_input_scatter_plot <- baseline_comparison_plot("falls_related_admissions")
+baseline_vs_input_scatter_plot <- baseline_comparison_plot("falls_related_admissions", "RBT")
 
 
 # historical trends - line chart ------------------------------------------
