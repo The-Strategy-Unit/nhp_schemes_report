@@ -23,7 +23,69 @@ extract_params <- function(params, runs_meta) {
         "_", stringr::str_sub(horizon_year, 3, 4)
       )
     ) |>
-    dplyr::left_join(runs_meta, by = dplyr::join_by("peer" == "dataset"))
+    dplyr::left_join(runs_meta, by = dplyr::join_by("peer" == "dataset")) |>
+    correct_day_procedures()
+  
+}
+
+correct_day_procedures <- function(x) {
+  
+  # Identify pairs of bads/day_procedures mitigators with flag
+  flagged <- x |>
+    dplyr::mutate(
+      mitigator_code_flag = dplyr::case_when(
+        stringr::str_detect(
+          strategy,
+          "^bads_daycase$|^day_procedures_usually_dc$"  # old name/new name
+        ) ~ "IP-EF-005",  # might as well flag with the mitigator code
+        stringr::str_detect(
+          strategy,
+          "^bads_daycase_occasional$|^day_procedures_occasionally_dc$"
+        ) ~ "IP-EF-006",
+        stringr::str_detect(
+          strategy,
+          "^bads_outpatients$|^day_procedures_usually_op$"
+        ) ~ "IP-EF-007",
+        stringr::str_detect(
+          strategy,
+          "^bads_outpatients_or_daycase$|^day_procedures_occasionally_op$"
+        ) ~ "IP-EF-008",
+        .default = NA_character_
+      )
+    )
+  
+  # Identify where a peer has more than one instance of the code, i.e. the
+  # mitigator is represented by both a bads and a day_procedures version. We'll
+  # use this info to filter out the bads version.
+  dupes <- flagged |>
+    dplyr::count(peer, mitigator_code_flag) |>
+    tidyr::drop_na(mitigator_code_flag) |>
+    dplyr::filter(n > 1)
+  
+  # Remove bads mitigators if there's a day_procedures replacement for it
+  for (i in seq(nrow(dupes))) {
+    flagged <- flagged |>
+      dplyr::filter(
+        !(peer == dupes[[i, "peer"]] &
+            mitigator_code_flag == dupes[[i, "mitigator_code_flag"]] &
+            stringr::str_detect(strategy, "^bads_"))
+      )
+  }
+  
+  # Remaining bads mitigators clearly don't have a replacement day_procedures
+  # version so we can just rename these ones.
+  flagged |>
+    dplyr::mutate(
+      strategy = dplyr::case_match(
+        strategy,
+        "bads_daycase" ~ "day_procedures_usually_dc",
+        "bads_daycase_occasional" ~ "day_procedures_occasionally_dc",
+        "bads_outpatients" ~ "day_procedures_usually_op",
+        "bads_outpatients_or_daycase" ~ "day_procedures_occasionally_op",
+        .default = strategy
+      )
+    ) |>
+    dplyr::select(-mitigator_code_flag)  # remove helper column
   
 }
 
@@ -74,6 +136,20 @@ prepare_skeleton_table <- function(extracted_params) {
   
 }
 
+#' Populate dat table
+#'
+#' Creates a single fact table from `skeleton_table` by left-joining with
+#' `extracted_params`, `trust_code_lookup`, `mitigator_lookup` and
+#' `nee_results`.
+#'
+#' @param skeleton_table Tibble - output of `prepare_skeleton_table()`
+#' @param extracted_params Tibble - output of `extract_params()`
+#' @param trust_code_lookup Tibble - from Azure file `nhp-scheme-lookup.csv`
+#' @param mitigator_lookup Tibble - from Azure file `mitigator-lookup.csv`
+#' @param nee_results Tibble - from fct_read.R of `nee_table.rds`
+#'
+#' @return Tibble of data
+#' @export
 populate_table <- function(
     skeleton_table,
     extracted_params,
@@ -113,7 +189,15 @@ populate_table <- function(
     dplyr::mutate(
       .keep = "none",
       # schemes
-      scheme_name,
+      scheme_name = dplyr::case_when(
+        # identify schemes whose mitigators are not yet finalised
+        !is.na(scheme_name) & stringr::str_starts(
+          string = run_stage |> stringr::str_to_lower(),
+          pattern = 'final',
+          negate = TRUE
+        ) ~ glue::glue('{scheme_name} ✏️'),
+        .default = scheme_name
+      ),
       scheme_code = peer,
       scheme_year = dplyr::if_else(
         stringr::str_detect(run_stage, "Final"),
@@ -169,7 +253,7 @@ get_all_schemes <- function(dat) {
     shiny::req() |>
     dplyr::distinct(scheme_name, scheme_code) |>
     dplyr::filter(!is.na(scheme_code)) |>
-    dplyr::mutate(scheme_name = paste0(scheme_name, " (", scheme_code, ")")) |>
+    dplyr::mutate(scheme_name = glue::glue("{scheme_name} ({scheme_code})")) |>
     dplyr::arrange(scheme_name) |>
     tibble::deframe()
 }
@@ -180,7 +264,7 @@ get_all_mitigators <- function(dat) {
     dplyr::distinct(mitigator_name, mitigator_code) |>
     dplyr::filter(!is.na(mitigator_code)) |>
     dplyr::mutate(
-      mitigator_name = paste0(mitigator_code, ": ", mitigator_name)
+      mitigator_name = glue::glue("{mitigator_code}: {mitigator_name}")
     ) |>
     dplyr::arrange(mitigator_code) |>
     tibble::deframe()
@@ -192,4 +276,39 @@ get_all_mitigator_groups <- function(dat) {
     dplyr::distinct(mitigator_group) |>
     dplyr::pull() |>
     sort()
+}
+
+#' Get a lookup table of participating Trusts
+#'
+#' Read a csv lookup file from Azure storage and do some clean-up to ensure
+#' one row per Trust.
+#'
+#' @param container_support The Azure container for supporting information, as obtained by `get_container()` from `fct_tabulate.R`
+#'
+#' @return Tibble of data listing participating Trusts
+#' @export
+get_trust_lookup <- function(container_support) {
+  
+  trust_lookup <-
+    # read the data from Azure
+    AzureStor::storage_read_csv(
+      container = container_support,
+      file = "nhp-scheme-lookup.csv",
+      show_col_types = FALSE
+    ) |>
+    # Imperial College (RYJ) appears three times due to different hospital
+    # sites, so simplify to one row
+    dplyr::mutate(
+      `Name of Hospital site` = dplyr::case_match(
+        `Trust ODS Code`,
+        'RYJ' ~ 'Imperial',
+        .default = `Name of Hospital site`
+      )
+    ) |>
+    # Ensure one row per trust - deals with Hampshire which appears twice
+    dplyr::distinct(`Trust ODS Code`, .keep_all = TRUE) |>
+    # Sort
+    dplyr::arrange(`Trust ODS Code`)
+  
+  return(trust_lookup)
 }
