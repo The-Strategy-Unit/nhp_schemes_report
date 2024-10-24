@@ -1,0 +1,454 @@
+---
+title: "Review of NHP scheme assumptions to reduce mitigatable activity"
+subtitle: "For roundtable discussion with Somerset"
+author: "Gabriel Hobro"
+date: today
+format: 
+  html:
+    embed-resources: true
+    toc: true
+    code-fold: true
+    execute:
+      message: false
+      warning: false
+      echo: false
+  # docx:
+  #   toc: true
+  #   number-sections: true
+  #   highlight-style: github
+  #   execute:
+  #     message: false
+  #     warning: false
+  #     echo: false
+    
+editor: visual
+---
+
+```{r libraries}
+library(dplyr)
+library(here)
+library(ggplot2)
+library(ggrepel)
+library(lubridate)
+library(stringr)
+library(tidyr)
+```
+
+```{r loading_data}
+# establish a connection to the board containing the data
+board <- pins::board_connect()
+
+# loading the historical data
+historical_mitigators_data <- pins::pin_read(
+  board, "thomas.jemmett/inputs_app_rates_data_v2-1")
+
+# loading the app inputs from pin
+nhp_tagged_runs_params <- pins::pin_read(
+  board, "matt.dray/nhp_tagged_runs_params")
+
+# loading the metadata from pin
+nhp_tagged_runs_meta <- pins::pin_read(
+  board, "matt.dray/nhp_tagged_runs_meta")
+
+# loading the NEE data
+nee_results <- readRDS(here("data","nee_table.Rds"))
+
+# loading the mitigator lookup
+mitigator_lookup <- read.csv(
+  here(
+    "data",
+    "mitigator-lookup.csv"), 
+  check.names = FALSE)
+
+# loading the trust code lookup
+trust_code_lookup <- read.csv(
+  here(
+    "data",
+    "nhp-scheme-lookup.csv"), 
+  check.names = FALSE) 
+```
+
+```{r wrangling}
+# load the functions which are defined for the app developed by Data Science team
+# https://github.com/The-Strategy-Unit/nhp_inputs_report_app/blob/main/R/fct_tabulate.R
+
+source("R/fct tabulate.R")
+
+# derive the cleaned data frame (same as that being used for Shiny app)
+extracted_params <- extract_params(nhp_tagged_runs_params, nhp_tagged_runs_meta)
+skeleton_table <- prepare_skeleton_table(extracted_params)
+
+
+# and the nee results
+nee_results <- nee_results |> 
+  dplyr::mutate(
+    param_name = dplyr::case_match(
+      param_name,
+      "bads_daycase" ~ "day_procedures_usually_dc",
+      "bads_daycase_occasional" ~ "day_procedures_occasionally_dc",
+      "bads_outpatients" ~ "day_procedures_usually_op",
+      "bads_outpatients_or_daycase" ~ "day_procedures_occasionally_op",
+      .default = param_name
+  )
+)
+
+dat <- populate_table(
+  skeleton_table,
+  extracted_params,
+  trust_code_lookup,
+  mitigator_lookup,
+  nee_results
+) |> 
+# divide nee results by 100 so as to standardise
+  mutate(across(nee_p10:nee_mean, ~ .x / 100)) 
+
+
+#get the baseline data
+baseline <- historical_mitigators_data |> 
+  filter(fyear == 201920,
+         procode %in% nhp_tagged_runs_meta$dataset) |> 
+  select(!fyear,
+         baseline_rate = rate,
+         baseline_n = n)
+  
+
+# cross-reference the baseline value and scheme inputs
+baseline_inputs_data <- left_join(dat, baseline,
+  by = c("scheme_code" = "procode",
+         "mitigator_variable" = "strategy"))
+```
+
+# Summary / discussion
+
+-   Somerset has selected amongst the fewest parameters of all schemes, with only 30 of the 92 used. The lowest count is Torbay at 17 whilst the highest is PAH and Hinchingbrooke, which have both selected 84.
+-   It has has one of the highest levels of ambition, with an average 21% reduction selected in its inputs. The most ambitious scheme on average is Hillingdon (34% reduction) and the least is PAH (6% reduction).
+-   It is one of the most confident schemes in its inputs, with an average confidence interval of 6 percentage points around the central estimate. By contrast, the most certain scheme, PAH, has an average of 2 percentage points and the least, James Paget, has an average of 22 percentage points.
+-   Perhaps unsurprisingly given its relative ambition, Somerset has amongst the largest proportion of its parameters which meet or exceed the ambition of the corresponding National Expert Elicitation value: 30.0% of its inputs do so, compared to 35.3% for Torbay and 2.9% for Frimley.
+-   There are 46 parameters which Somerset did not use where at least half of the other 17 schemes did provide an input. These include *Falls Related Admissions* which was selected by all of the 16 other schemes.
+-   It has 2 parameters which are significantly more ambitious than its average input of a 21% reduction: *Virtual Wards Admission Avoidance (Acute Respiratory Infection)* (85% reduction) and *Enhanced Recovery (Breast)* (65% reduction)
+
+# Overview
+
+## Purpose of this report
+
+The purpose of this report is to compare individual scheme's inputs to the NHP Demand and Capacity Model. We consider 4 areas by which to compare the inputs: parameter coverage, ambition, certainty, and credibility given the National Elicitation Exercise (NEE):
+
+<table>
+<thead>
+<tr class="header">
+<th><p>Area of analysis</p></th>
+<th><p>Scheme-level</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><p><strong>Parameter coverage</strong></p></td>
+<td><p>What proportion of parameters has each scheme selected?</p></td>
+</tr>
+<tr class="even">
+<td><p><strong>Parameter ambition</strong></p></td>
+<td><p>What is the average ambition of each schemes selected parameters?</p></td>
+</tr>
+<tr class="odd">
+<td><p><strong>Parameter certainty</strong></p></td>
+<td><p>What is the is the average certainty of each schemes selected parameters?</p></td>
+</tr>
+<tr class="even">
+<td><p><strong>Parameter credibility</strong></p>
+<p><strong>(NEE comparison)</strong></p></td>
+<td><p>How do each schemes parameter selections compare to the the NEE mid-point?</p></td>
+</tr>
+</tbody>
+</table>
+
+## Parameters in analysis
+
+There are 92 parameters for activity mitigation in the model. These are grouped by the activity type (inpatient admissions, outpatient attendances, and A&E attendances) as well as the mitigation type (activity avoidance, or efficiencies). We have printed this complete list of parameters at the bottom of this report.
+
+## Schemes in analysis
+
+The following schemes have completed the exercise.
+
+```{r site_list}
+n_schemes <- nrow(nhp_tagged_runs_meta)
+nhp_tagged_runs_meta |> 
+  mutate(create_datetime = as.Date(ymd_hms(create_datetime)),
+         run_stage = str_to_title(str_extract(run_stage, "^[^_]+"))) |> 
+  left_join(trust_code_lookup, 
+            by = c("dataset" = "Trust ODS Code")) |> 
+  select(Trust = `Name of Trust`,
+         Site = `Name of Hospital site`,
+         `Trust code` = dataset,
+         `Run stage` = run_stage,
+         Date = create_datetime) |> 
+  gt::gt() |> 
+  gt::tab_header("Schemes that have completed exercise")
+```
+
+# Scheme-level analyses
+
+```{r scheme}
+selected_scheme_code <- "RH5"
+selected_scheme_name <- "Somerset"
+
+```
+
+Below we present scheme-level analyses. `r selected_scheme_name` is highlighted in blue.
+
+```{r highlight_schemes}
+highlight_schemes <- function(data, scheme) {
+  data |> 
+    mutate(color_fill = case_when(
+      scheme_code == scheme ~ "blue",
+      TRUE ~ "grey"))
+}
+
+```
+
+## Output report excerpts
+
+For added context, we present excerpts from the schemes' output reports for figures 8.1 (mitigator impact), 8.2 (top parameters for reduced admisisons due to activity avoidance), 8.3 (top parameters for reduced bed days due to activity avoidance), and 8.4 (top parameters for reduced bed days due to efficiences)
+
+We also compare a subset of the analysis from section 9 containing compound annual growth rates (CAGRs) from BAU shifts.
+
+### 8.1 Total impact of mitigation strategies
+
+![](scheme_output_reports/images/somerset_8_1.png)
+
+### 8.2 Top parameters for admission avoidance
+
+![](scheme_output_reports/images/somerset_8_2.png)
+
+### 8.3 Top parameters for reduced bed days due to avoidance
+
+![](scheme_output_reports/images/somerset_8_3.png)
+
+### 8.4 Top parameters for reduced bed days due to efficiencies
+
+![](scheme_output_reports/images/somerset_8_4.png)
+
+### 9. Compound annual growth rates from BAU shifts
+
+| Measure                                                 | `r selected_scheme_name` |
+|-----------------------------------------------------|-------------------|
+| Assumed BAU admissions avoided as CAGR                  | -0.31%                   |
+| Assumed BAU resultant beddays avoided as CAGR           | -0.71%                   |
+| Assumed BAU productivity as CAGR for overall LOS impact | -0.4%                    |
+
+## How many parameter set compared to other participating schemes
+
+Below we can see the number of parameters that each scheme has selected in descending order.
+
+```{r mitigator_coverage_by_scheme}
+mitigator_coverage_by_scheme <- dat |> 
+  filter(!is.na(scheme_name)) |> 
+  count(scheme_code,scheme_name) 
+
+mitigator_coverage_by_scheme |> 
+  highlight_schemes(selected_scheme_code) |> 
+  ggplot() +
+  geom_bar(aes(x=n, y=reorder(scheme_name, n), fill=color_fill), 
+           stat="identity") +
+  geom_text(aes(x = n, y = reorder(scheme_name, n), label = n), 
+            position = position_stack(vjust = 0.5)) +
+  scale_fill_identity() +
+  ggtitle("Parameter coverage") + 
+  xlab("Number of parameters selected") +
+  theme(axis.title.y = element_blank()) +
+  NHSRtheme::theme_nhs()
+  
+```
+
+## More or less ambitious than other participating schemes (average over all parameters)
+
+Below, for each scheme, we can see the average ambition over its selected parameters in descending order. Note that the lower the number, the more ambitious the given scheme has been in its selections given that the ambition is a reduction in the activity in scope of the parameters.
+
+```{r mitigator_ambition_by_scheme}
+mitigator_ambition_by_scheme <- dat |> 
+  filter(!is.na(value_mid)) |> 
+  summarise(average_ambition = mean(value_mid),
+            .by = c(scheme_code, scheme_name))
+
+mitigator_ambition_by_scheme |> 
+  highlight_schemes(selected_scheme_code) |> 
+  ggplot() +
+  geom_bar(aes(x=average_ambition, y=reorder(scheme_name, average_ambition, decreasing = TRUE), fill=color_fill), 
+           stat="identity") +
+  scale_fill_identity() +
+  geom_text(aes(x = average_ambition, y = reorder(scheme_name, average_ambition), label = round(average_ambition,2)), 
+            position = position_stack(vjust = 0.5)) +
+  ggtitle("Parameter ambition") + 
+  xlab("Average parameter mid-point") +
+  theme(axis.title.y = element_blank()) +
+  NHSRtheme::theme_nhs() +
+  # Add the vertical label "Increasing ambition" and the arrow
+  annotate("text", x = 1.0, y = n_schemes / 2, label = "Increasing ambition", angle = 90, vjust = 1) + 
+  annotate("segment", x = 1.0, y = 0, yend = n_schemes, 
+           arrow = arrow(length = unit(0.2, "cm")))
+```
+
+## More or less certain than other participating schemes (average over all parameters)
+
+Below we can see the average parameter certainty by scheme. This is calculated as the average range between the p10 and p90 provided for parameters. This is presented in descending order of certainty, i.e. ascending order of average range.
+
+```{r mitigator_certainty_by_scheme}
+mitigator_certainty_by_scheme <- dat |> 
+  filter(!is.na(value_mid)) |> 
+  summarise(average_range = mean(value_range),
+            .by = c(scheme_code, scheme_name))
+
+mitigator_certainty_by_scheme |> 
+  highlight_schemes(selected_scheme_code) |> 
+  ggplot() +
+  geom_bar(aes(x=average_range, y=reorder(scheme_name, average_range, decreasing= TRUE), fill=color_fill), 
+           stat="identity") +
+  scale_fill_identity() +
+  geom_text(aes(x = average_range, y = reorder(scheme_name, average_range), label = round(average_range,2)), 
+            position = position_stack(vjust = 0.5)) +
+  ggtitle("Parameter certainty") + 
+  xlab("Average parameter input range") +
+  theme(axis.title.y = element_blank()) +
+  NHSRtheme::theme_nhs() +
+  # Add the vertical label "Increasing ambition" and the arrow
+  annotate("text", x = 0.23, y = n_schemes / 2, label = "Increasing certainty", angle = 90, vjust = 1) + 
+  annotate("segment", x = 0.23, y = 0, yend = n_schemes, 
+           arrow = arrow(length = unit(0.2, "cm")))
+```
+
+## More or less ambitious than NEE (proportion over all parameter assumptions)
+
+Below we can see proportion of each scheme's inputs that are as or more ambitious than the NEE value for that scheme. This is presented in descending order.
+
+```{r nee_comparison_by_scheme}
+nee_comparison_by_scheme <- dat |> 
+  filter(!is.na(value_mid)) |> 
+  mutate(nee_comparison = case_when(value_mid > nee_p50 ~ "Less ambitious",
+                                     value_mid <= nee_p50 ~ "As or more ambitious", 
+                                     TRUE ~ "No NEE value")) |> 
+  count(scheme_code, scheme_name, nee_comparison)
+
+nee_comparison_by_scheme |> 
+  group_by(scheme_code, scheme_name) |> 
+  mutate(p = n/sum(n)) |> 
+  filter(nee_comparison == "As or more ambitious") |> 
+  highlight_schemes(selected_scheme_code) |> 
+  ggplot() +
+  geom_bar(aes(x=p, y=reorder(scheme_name,p), fill=color_fill), 
+           stat="identity", 
+           position = "dodge") +
+  scale_fill_identity() +
+  ggtitle("NEE comparison") + 
+  geom_text(aes(x = p, y = reorder(scheme_name, p), label = scales::percent(p,0.1)), 
+            position = position_stack(vjust = 0.5)) +
+  xlab("Proportion of parameters as or more ambitious than NEE") +
+  theme(axis.title.y = element_blank()) +
+  scale_x_continuous(labels = scales::percent)+
+  NHSRtheme::theme_nhs()
+```
+
+## Notable scheme assumptions
+
+### Potentially missed opportunities to set activity mitigation assumptions
+
+```{r missing_mitigators_by_lookup}
+source("R/missing_mitigators_by_scheme.R")
+```
+
+All `r nrow(mitigator_lookup)` parameters were selected at least once by a scheme.
+
+The following table indicate unselected parameters for `r selected_scheme_name`.
+
+We have filtered this to where at least half of the `r n_schemes` schemes have selected the parameter.
+
+```{r unset_parameters}
+missing_mitigators_by_scheme |> 
+  filter(scheme_code == selected_scheme_code) |>
+  filter(total_incidence >= n_schemes / 2) |>
+  arrange(scheme_code, desc(total_incidence)) |>
+  select(!scheme_code) |>
+  gt::gt() |> 
+  gt::tab_header("Unused parameters by scheme") |> 
+  gt::cols_label(scheme = "Scheme",
+                 mitigator_group = "Mitigatable activity group",
+                 mitigator = "Parameter",
+                 total_incidence = "Incidence amongst other schemes")
+
+```
+
+### Particularly ambitious scheme assumptions
+
+The following table indicates the parameters set by `r selected_scheme_name` that were significantly more ambitious than its other inputs.
+
+For a given scheme, we define this as a being more than 1.96 standard deviations away from the mean of its inputs.
+
+```{r scheme_outliers}
+outlier_mitigators_by_scheme <- dat |>
+  filter(!is.na(value_mid)) |> 
+  mutate(mean_value = mean(value_mid),
+         sd = sd(value_mid),
+         .by = scheme_code) |> 
+  filter((mean_value - value_mid) > 1.96 * sd) |> 
+  select(scheme_code,scheme_name,mitigator_group, mitigator_name, value_mid, mean_value, sd)
+
+outlier_mitigators_by_scheme |> 
+  filter(scheme_code == selected_scheme_code) |>
+  select(-scheme_code) |> 
+  gt::gt() |> 
+  gt::tab_header("Significantly more ambitious parameters by scheme") |> 
+  gt::cols_label(scheme_name = "Scheme", 
+                 mitigator_group = "Mitigatable activity group", 
+                 mitigator_name = "Parameter", 
+                 value_mid = "Mid-point", 
+                 mean_value = "Scheme's average parameter mid-point", 
+                 sd = "Standard deviation of schemes' parameters")
+
+```
+
+## Limitations / issues to note
+
+-   In some cases schemes have selected parameters and inputted a value of 1 which is effectively the same as not selecting that parameter
+
+## Possible further work
+
+-   An assessment of the materiality of the schemes' unused parameters
+-   We have not presented a baseline / time series analysis for the scheme-level analyses
+
+# Annex: Methods and data sources
+
+## Data sources
+
+There are three broad data sources used in this analysis:
+
+-   **Scheme inputs from the Demand and Activity Model** -- this includes one row per parameter and scheme (**909** total combinations), with information on the p10, p90 and mid-point for that particular parameter as well as the baseline and horizon year.
+-   **NEE results** -- this provides information on the average p10 and p90 selected by subject matter experts as part of the NEE exercise for the **78** parameter included.
+-   **Scheme historical activity rates** -- this provides the rates of activity falling in scope of parameter by scheme, financial year (from 2008-09 to 2022-23), and **90** parameters.
+
+### National expert elicitation exercise
+
+The NEE exercise was conducted in the autumn of 2023 as a way of gathering subject matter experts' (SMEs) views on the likely values that parameters in the Demand and Activity Model would take in the future at an England level. For example, SMEs might have indicated what they believed would be the impact of healthy life expectancy on hospital activity in the future.
+
+The values provided by SMEs took the form of the the 10th and 90th percentiles (commonly known as the p10-p90 or 80% interval).
+
+Efforts were taken to ensure that the SMEs' predictions were free from cognitive biases such as anchoring, availability, and representativeness, groupthink, overconfidence, and difficulties associated with communicating knowledge in numbers and probabilities.
+
+The NEE exercise is considered pertinent to our analysis as for most of the parameters that have been set locally (78 out of 92), it provides a national-level view on which to consider the relative ambition that schemes have shown.
+
+## Model horizons
+
+Although all schemes are using the baseline of 2019-20, not all schemes have the same model horizon. Thus when comparing the schemes' inputs, the values are not necessarily like-for-like given that a sooner horizon indicates a faster yearly change, all other things being equal -- e.g. a 20% reduction in 10 years will be more dramatic than a 20% reduction in 20 years.
+
+## Parameters
+
+The following table contains a complete list of the 92 parameters in the D&C model.
+
+```{r mitigators_list}
+mitigator_lookup |> 
+  select(`Mitigatable activity` = `Strategy name`,
+         `Parameter name` = `Strategy variable`,
+         Grouping, 
+         `Activity type`, 
+         `Mitigation type` = `Mitigator type`) |> 
+  gt::gt() |> 
+  gt::tab_header("All mitigatable activity in analysis")
+
+```
