@@ -58,28 +58,9 @@ source("R/fct tabulate.R")
 extracted_params <- extract_params(nhp_tagged_runs_params, nhp_tagged_runs_meta)
 skeleton_table <- prepare_skeleton_table(extracted_params)
 
-# adjust the day case mitigator names for the lookup
-# just remove from skeleton table
-skeleton_table <- skeleton_table |> filter(
-  !(strategy %in% c("bads_daycase",
-                    "bads_daycase_occasional",
-                    "bads_outpatients",
-                    "bads_outpatients_or_daycase")))
 
-# in the extracted parameters
-extracted_params <- extracted_params |> 
-  dplyr::mutate(
-    strategy = dplyr::case_match(
-      strategy,
-      "bads_daycase" ~ "day_procedures_usually_dc",
-      "bads_daycase_occasional" ~ "day_procedures_occasionally_dc",
-      "bads_outpatients" ~ "day_procedures_usually_op",
-      "bads_outpatients_or_daycase" ~ "day_procedures_occasionally_op",
-      .default = strategy
-    )
-  )
 
-# and the nee results
+# Rename the day procedure columns so as to avoid the use of BADS
 nee_results <- nee_results |> 
   dplyr::mutate(
     param_name = dplyr::case_match(
