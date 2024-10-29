@@ -36,7 +36,16 @@ trust_code_lookup <- read.csv(
   here(
     "data",
     "nhp-scheme-lookup.csv"), 
-  check.names = FALSE) 
+  check.names = FALSE) |> 
+# Imperial College (RYJ) appears three times due to different hospital
+# sites, so simplify to one row
+  dplyr::mutate(
+    `Name of Hospital site` = dplyr::case_match(
+      `Trust ODS Code`,
+      'RYJ' ~ 'Imperial',
+      .default = `Name of Hospital site`))|>
+  # Ensure one row per trust - deals with Hampshire which appears twice
+  dplyr::distinct(`Trust ODS Code`, .keep_all = TRUE)
 
 
 # wrangling ---------------------------------------------------------------
