@@ -1,13 +1,13 @@
 ---
 title: "Review of NHP scheme assumptions to reduce mitigatable activity"
-subtitle: "For roundtable discussion with Somerset"
+subtitle: "For roundtable discussion with Airedale"
 author: "Gabriel Hobro"
 date: today
 format: 
   html:
     embed-resources: true
     toc: true
-    code-fold: true
+    #code-fold: true
     execute:
       message: false
       warning: false
@@ -130,18 +130,16 @@ baseline_inputs_data <- left_join(dat, baseline,
 
 # Summary / discussion
 
--   Somerset has selected amongst the fewest parameters of all schemes, with only 30 of the 92 used. The lowest count is Torbay at 17 whilst the highest is PAH and Hinchingbrooke, which have both selected 84.
--   It has has one of the highest levels of ambition, with an average 21% reduction selected in its inputs. The most ambitious scheme on average is Hillingdon (34% reduction) and the least is PAH (6% reduction).
--   It is one of the most confident schemes in its inputs, with an average confidence interval of 6 percentage points around the central estimate. By contrast, the most certain scheme, PAH, has an average of 2 percentage points and the least, James Paget, has an average of 22 percentage points.
--   Perhaps unsurprisingly given its relative ambition, Somerset has amongst the largest proportion of its parameters which meet or exceed the ambition of the corresponding National Expert Elicitation value: 30.0% of its inputs do so, compared to 35.3% for Torbay and 2.9% for Frimley.
--   There are 46 parameters which Somerset did not use where at least half of the other 17 schemes did provide an input. These include *Falls Related Admissions* which was selected by all of the 16 other schemes.
--   It has 2 parameters which are significantly more ambitious than its average input of a 21% reduction: *Virtual Wards Admission Avoidance (Acute Respiratory Infection)* (85% reduction) and *Enhanced Recovery (Breast)* (65% reduction)
+```{r }
+markdown::mark("scheme_text_markdown/airedale.md", output = FALSE, template = FALSE)
+```
+
 
 # Overview
 
 ## Purpose of this report
 
-The purpose of this report is to compare individual scheme's inputs to the NHP Demand and Capacity Model. We consider 4 areas by which to compare the inputs: parameter coverage, ambition, certainty, and credibility given the National Elicitation Exercise (NEE):
+The purpose of this report is to compare individual scheme's inputs to the NHP Demand and Capacity Model. We consider 4 areas by which to compare the inputs: parameter coverage, value, certainty, and credibility given the National Elicitation Exercise (NEE):
 
 <table>
 <thead>
@@ -156,8 +154,8 @@ The purpose of this report is to compare individual scheme's inputs to the NHP D
 <td><p>What proportion of parameters has each scheme selected?</p></td>
 </tr>
 <tr class="even">
-<td><p><strong>Parameter ambition</strong></p></td>
-<td><p>What is the average ambition of each schemes selected parameters?</p></td>
+<td><p><strong>Parameter value</strong></p></td>
+<td><p>What is the average value of each schemes selected parameters?</p></td>
 </tr>
 <tr class="odd">
 <td><p><strong>Parameter certainty</strong></p></td>
@@ -198,8 +196,8 @@ nhp_tagged_runs_meta |>
 # Scheme-level analyses
 
 ```{r scheme}
-selected_scheme_code <- "RH5"
-selected_scheme_name <- "Somerset"
+selected_scheme_code <- "RCF"
+selected_scheme_name <- "Airedale"
 
 ```
 
@@ -223,27 +221,27 @@ We also compare a subset of the analysis from section 9 containing compound annu
 
 ### 8.1 Total impact of mitigation strategies
 
-![](scheme_output_reports/images/somerset_8_1.png)
+![](scheme_output_reports/images/airedale_8_1.png)
 
 ### 8.2 Top parameters for admission avoidance
 
-![](scheme_output_reports/images/somerset_8_2.png)
+![](scheme_output_reports/images/airedale_8_2.png)
 
 ### 8.3 Top parameters for reduced bed days due to avoidance
 
-![](scheme_output_reports/images/somerset_8_3.png)
+![](scheme_output_reports/images/airedale_8_3.png)
 
 ### 8.4 Top parameters for reduced bed days due to efficiencies
 
-![](scheme_output_reports/images/somerset_8_4.png)
+![](scheme_output_reports/images/airedale_8_4.png)
 
 ### 9. Compound annual growth rates from BAU shifts
 
 | Measure                                                 | `r selected_scheme_name` |
-|-----------------------------------------------------|-------------------|
-| Assumed BAU admissions avoided as CAGR                  | -0.31%                   |
-| Assumed BAU resultant beddays avoided as CAGR           | -0.71%                   |
-| Assumed BAU productivity as CAGR for overall LOS impact | -0.4%                    |
+|----------------------------------------------------|--------------------|
+| Assumed BAU admissions avoided as CAGR                  |                   |
+| Assumed BAU resultant beddays avoided as CAGR           |                    |
+| Assumed BAU productivity as CAGR for overall LOS impact |                     |
 
 ## How many parameter set compared to other participating schemes
 
@@ -262,16 +260,17 @@ mitigator_coverage_by_scheme |>
   geom_text(aes(x = n, y = reorder(scheme_name, n), label = n), 
             position = position_stack(vjust = 0.5)) +
   scale_fill_identity() +
-  ggtitle("Parameter coverage") + 
+  ggtitle("Coverage") + 
   xlab("Number of parameters selected") +
   theme(axis.title.y = element_blank()) +
   NHSRtheme::theme_nhs()
   
 ```
 
-## More or less ambitious than other participating schemes (average over all parameters)
+## Extent of mitigation (average over all parameters)
 
-Below, for each scheme, we can see the average ambition over its selected parameters in descending order. Note that the lower the number, the more ambitious the given scheme has been in its selections given that the ambition is a reduction in the activity in scope of the parameters.
+Below, for each scheme, we can see the average value over its selected parameters in ascending order. Note that the lower the number, the greater extent of mitigation the given scheme has assumed in its
+selections given that the lower values corresponds to less activity.
 
 ```{r mitigator_ambition_by_scheme}
 mitigator_ambition_by_scheme <- dat |> 
@@ -287,12 +286,12 @@ mitigator_ambition_by_scheme |>
   scale_fill_identity() +
   geom_text(aes(x = average_ambition, y = reorder(scheme_name, average_ambition), label = round(average_ambition,2)), 
             position = position_stack(vjust = 0.5)) +
-  ggtitle("Parameter ambition") + 
+  ggtitle("Extent") + 
   xlab("Average parameter mid-point") +
   theme(axis.title.y = element_blank()) +
   NHSRtheme::theme_nhs() +
   # Add the vertical label "Increasing ambition" and the arrow
-  annotate("text", x = 1.0, y = n_schemes / 2, label = "Increasing ambition", angle = 90, vjust = 1) + 
+  annotate("text", x = 1.0, y = n_schemes / 2, label = "Increasing mitigation", angle = 90, vjust = 1) + 
   annotate("segment", x = 1.0, y = 0, yend = n_schemes, 
            arrow = arrow(length = unit(0.2, "cm")))
 ```
@@ -315,7 +314,7 @@ mitigator_certainty_by_scheme |>
   scale_fill_identity() +
   geom_text(aes(x = average_range, y = reorder(scheme_name, average_range), label = round(average_range,2)), 
             position = position_stack(vjust = 0.5)) +
-  ggtitle("Parameter certainty") + 
+  ggtitle("Certainty") + 
   xlab("Average parameter input range") +
   theme(axis.title.y = element_blank()) +
   NHSRtheme::theme_nhs() +
@@ -325,9 +324,9 @@ mitigator_certainty_by_scheme |>
            arrow = arrow(length = unit(0.2, "cm")))
 ```
 
-## More or less ambitious than NEE (proportion over all parameter assumptions)
+## Comparison to NEE (proportion over all parameter assumptions)
 
-Below we can see proportion of each scheme's inputs that are as or more ambitious than the NEE value for that scheme. This is presented in descending order.
+Below we can see proportion of each scheme's inputs that assume more mitigation than the corresponding NEE value from the NEE exercise. This is presented in descending order.
 
 ```{r nee_comparison_by_scheme}
 nee_comparison_by_scheme <- dat |> 
@@ -347,10 +346,10 @@ nee_comparison_by_scheme |>
            stat="identity", 
            position = "dodge") +
   scale_fill_identity() +
-  ggtitle("NEE comparison") + 
+  ggtitle("NEE") + 
   geom_text(aes(x = p, y = reorder(scheme_name, p), label = scales::percent(p,0.1)), 
             position = position_stack(vjust = 0.5)) +
-  xlab("Proportion of parameters as or more ambitious than NEE") +
+  xlab("Proportion of parameters assuming higher mitigation than NEE") +
   theme(axis.title.y = element_blank()) +
   scale_x_continuous(labels = scales::percent)+
   NHSRtheme::theme_nhs()
@@ -385,9 +384,9 @@ missing_mitigators_by_scheme |>
 
 ```
 
-### Particularly ambitious scheme assumptions
+### Particularly notable scheme assumptions
 
-The following table indicates the parameters set by `r selected_scheme_name` that were significantly more ambitious than its other inputs.
+The following table indicates the parameters set by `r selected_scheme_name` that assumed significantly more mitigation than its average.
 
 For a given scheme, we define this as a being more than 1.96 standard deviations away from the mean of its inputs.
 
@@ -404,7 +403,7 @@ outlier_mitigators_by_scheme |>
   filter(scheme_code == selected_scheme_code) |>
   select(-scheme_code) |> 
   gt::gt() |> 
-  gt::tab_header("Significantly more ambitious parameters by scheme") |> 
+  gt::tab_header("Parameters with significantly higher reductions") |> 
   gt::cols_label(scheme_name = "Scheme", 
                  mitigator_group = "Mitigatable activity group", 
                  mitigator_name = "Parameter", 
@@ -441,7 +440,7 @@ The values provided by SMEs took the form of the the 10th and 90th percentiles (
 
 Efforts were taken to ensure that the SMEs' predictions were free from cognitive biases such as anchoring, availability, and representativeness, groupthink, overconfidence, and difficulties associated with communicating knowledge in numbers and probabilities.
 
-The NEE exercise is considered pertinent to our analysis as for most of the parameters that have been set locally (78 out of 92), it provides a national-level view on which to consider the relative ambition that schemes have shown.
+The NEE exercise is considered pertinent to our analysis as for most of the parameters that have been set locally (78 out of 92), it provides a national-level view on which to consider the relative level of mitigation that schemes have shown.
 
 ## Model horizons
 
