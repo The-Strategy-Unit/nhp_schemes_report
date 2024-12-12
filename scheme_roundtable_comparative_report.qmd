@@ -1,6 +1,9 @@
 ---
+params:
+  scheme_code: NULL
+  scheme_name: NULL
 title: "Review of NHP scheme assumptions to reduce mitigatable activity"
-subtitle: "For roundtable discussion with Airedale"
+subtitle: "For roundtable discussion with `r params$scheme_name`"
 author: "Gabriel Hobro"
 date: today
 format: 
@@ -130,10 +133,9 @@ baseline_inputs_data <- left_join(dat, baseline,
 
 # Summary / discussion
 
-```{r }
-markdown::mark("scheme_text_markdown/airedale.md", output = FALSE, template = FALSE)
+```{r}
+markdown::mark(paste0("scheme_text_markdown/", params$scheme_code, ".md"))
 ```
-
 
 # Overview
 
@@ -195,13 +197,7 @@ nhp_tagged_runs_meta |>
 
 # Scheme-level analyses
 
-```{r scheme}
-selected_scheme_code <- "RCF"
-selected_scheme_name <- "Airedale"
-
-```
-
-Below we present scheme-level analyses. `r selected_scheme_name` is highlighted in blue.
+Below we present scheme-level analyses. `r params$scheme_name` is highlighted in blue.
 
 ```{r highlight_schemes}
 highlight_schemes <- function(data, scheme) {
@@ -237,7 +233,7 @@ We also compare a subset of the analysis from section 9 containing compound annu
 
 ### 9. Compound annual growth rates from BAU shifts
 
-| Measure                                                 | `r selected_scheme_name` |
+| Measure                                                 | `r params$scheme_name` |
 |----------------------------------------------------|--------------------|
 | Assumed BAU admissions avoided as CAGR                  |                   |
 | Assumed BAU resultant beddays avoided as CAGR           |                    |
@@ -253,7 +249,7 @@ mitigator_coverage_by_scheme <- dat |>
   count(scheme_code,scheme_name) 
 
 mitigator_coverage_by_scheme |> 
-  highlight_schemes(selected_scheme_code) |> 
+  highlight_schemes(params$scheme_code) |> 
   ggplot() +
   geom_bar(aes(x=n, y=reorder(scheme_name, n), fill=color_fill), 
            stat="identity") +
@@ -278,7 +274,7 @@ mitigator_ambition_by_scheme <- dat |>
             .by = c(scheme_code, scheme_name))
 
 mitigator_ambition_by_scheme |> 
-  highlight_schemes(selected_scheme_code) |> 
+  highlight_schemes(params$scheme_code) |> 
   ggplot() +
   geom_bar(aes(x=average_ambition, y=reorder(scheme_name, average_ambition, decreasing = TRUE), fill=color_fill), 
            stat="identity") +
@@ -306,7 +302,7 @@ mitigator_certainty_by_scheme <- dat |>
             .by = c(scheme_code, scheme_name))
 
 mitigator_certainty_by_scheme |> 
-  highlight_schemes(selected_scheme_code) |> 
+  highlight_schemes(params$scheme_code) |> 
   ggplot() +
   geom_bar(aes(x=average_range, y=reorder(scheme_name, average_range, decreasing= TRUE), fill=color_fill), 
            stat="identity") +
@@ -339,7 +335,7 @@ nee_comparison_by_scheme |>
   group_by(scheme_code, scheme_name) |> 
   mutate(p = n/sum(n)) |> 
   filter(nee_comparison == "As or more ambitious") |> 
-  highlight_schemes(selected_scheme_code) |> 
+  highlight_schemes(params$scheme_code) |> 
   ggplot() +
   geom_bar(aes(x=p, y=reorder(scheme_name,p), fill=color_fill), 
            stat="identity", 
@@ -364,13 +360,13 @@ source("R/missing_mitigators_by_scheme.R")
 
 All `r nrow(mitigator_lookup)` parameters were selected at least once by a scheme.
 
-The following table indicate unselected parameters for `r selected_scheme_name`.
+The following table indicate unselected parameters for `r params$scheme_name`.
 
 We have filtered this to where at least half of the `r n_schemes` schemes have selected the parameter.
 
 ```{r unset_parameters}
 missing_mitigators_by_scheme |> 
-  filter(scheme_code == selected_scheme_code) |>
+  filter(scheme_code == params$scheme_code) |>
   filter(total_incidence >= n_schemes / 2) |>
   arrange(scheme_code, desc(total_incidence)) |>
   select(!scheme_code) |>
@@ -385,7 +381,7 @@ missing_mitigators_by_scheme |>
 
 ### Particularly notable scheme assumptions
 
-The following table indicates the parameters set by `r selected_scheme_name` that assumed significantly more mitigation than its average.
+The following table indicates the parameters set by `r params$scheme_name` that assumed significantly more mitigation than its average.
 
 For a given scheme, we define this as a being more than 1.96 standard deviations away from the mean of its inputs.
 
@@ -399,7 +395,7 @@ outlier_mitigators_by_scheme <- dat |>
   select(scheme_code,scheme_name,mitigator_group, mitigator_name, value_mid, mean_value, sd)
 
 outlier_mitigators_by_scheme |> 
-  filter(scheme_code == selected_scheme_code) |>
+  filter(scheme_code == params$scheme_code) |>
   select(-scheme_code) |> 
   gt::gt() |> 
   gt::tab_header("Parameters with significantly higher reductions") |> 
