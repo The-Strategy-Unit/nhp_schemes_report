@@ -269,8 +269,7 @@ mitigator_coverage_by_scheme |>
 
 ## Extent of mitigation (average over all parameters)
 
-Below, for each scheme, we can see the average value over its selected parameters in ascending order. Note that the lower the number, the greater extent of mitigation the given scheme has assumed in its
-selections given that the lower values corresponds to less activity.
+Below, for each scheme, we can see the average value over its selected parameters in ascending order. Note that the lower the number, the greater extent of mitigation the given scheme has assumed in its selections given that the lower values corresponds to less activity.
 
 ```{r mitigator_ambition_by_scheme}
 mitigator_ambition_by_scheme <- dat |> 
