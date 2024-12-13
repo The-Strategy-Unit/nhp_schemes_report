@@ -133,13 +133,16 @@ baseline_inputs_data <- left_join(dat, baseline,
 
 # Summary / discussion
 
-```{r}
+```{r discussion}
+#| output: asis
+#| echo: false
+
 # Define the file path for the commentary
 commentary_file <- paste0("scheme_text_markdown/", params$scheme_code, ".md")
 
 # Check if the file exists and include it
 if (file.exists(commentary_file)) {
-  htmltools::includeMarkdown(commentary_file)
+  readLines(commentary_file) |> cat(sep = "\n")
 } else {
   cat("No commentary available for this input.")
 }
@@ -151,33 +154,12 @@ if (file.exists(commentary_file)) {
 
 The purpose of this report is to compare individual scheme's inputs to the NHP Demand and Capacity Model. We consider 4 areas by which to compare the inputs: parameter coverage, value, certainty, and credibility given the National Elicitation Exercise (NEE):
 
-<table>
-<thead>
-<tr class="header">
-<th><p>Area of analysis</p></th>
-<th><p>Scheme-level</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><p><strong>Parameter coverage</strong></p></td>
-<td><p>What proportion of parameters has each scheme selected?</p></td>
-</tr>
-<tr class="even">
-<td><p><strong>Parameter value</strong></p></td>
-<td><p>What is the average value of each schemes selected parameters?</p></td>
-</tr>
-<tr class="odd">
-<td><p><strong>Parameter certainty</strong></p></td>
-<td><p>What is the is the average certainty of each schemes selected parameters?</p></td>
-</tr>
-<tr class="even">
-<td><p><strong>Parameter credibility</strong></p>
-<p><strong>(NEE comparison)</strong></p></td>
-<td><p>How do each schemes parameter selections compare to the the NEE mid-point?</p></td>
-</tr>
-</tbody>
-</table>
+| Area of analysis      | Question                                                                   |
+|-----------------------|----------------------------------------------------------------------------|
+| Parameter coverage    | What proportion of parameters has each scheme selected?                    |
+| Parameter value       | What is the average value of each schemes selected parameters?             |
+| Parameter certainty   | What is the is the average certainty of each schemes selected parameters?  |
+| Parameter credibility | How do each schemes parameter selections compare to the the NEE mid-point? |
 
 ## Parameters in analysis
 
