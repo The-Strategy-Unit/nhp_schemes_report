@@ -134,7 +134,15 @@ baseline_inputs_data <- left_join(dat, baseline,
 # Summary / discussion
 
 ```{r}
-markdown::mark(paste0("scheme_text_markdown/", params$scheme_code, ".md"))
+# Define the file path for the commentary
+commentary_file <- paste0("scheme_text_markdown/", params$scheme_code, ".md")
+
+# Check if the file exists and include it
+if (file.exists(commentary_file)) {
+  htmltools::includeMarkdown(commentary_file)
+} else {
+  cat("No commentary available for this input.")
+}
 ```
 
 # Overview
