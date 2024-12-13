@@ -15,14 +15,14 @@ format:
       message: false
       warning: false
       echo: false
-  # docx:
-  #   toc: true
-  #   number-sections: true
-  #   highlight-style: github
-  #   execute:
-  #     message: false
-  #     warning: false
-  #     echo: false
+  docx:
+    toc: true
+    number-sections: true
+    highlight-style: github
+    execute:
+      message: false
+      warning: false
+      echo: false
     
 editor: visual
 ---
