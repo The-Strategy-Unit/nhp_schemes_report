@@ -238,15 +238,21 @@ source("R/outputs_processing.R")
 
 ### 8.2 Top parameters for admission avoidance
 
-![](scheme_output_reports/images/airedale_8_2.png)
+```{r figure_8_2}
+plots_data[[1]]
+```
 
 ### 8.3 Top parameters for reduced bed days due to avoidance
 
-![](scheme_output_reports/images/airedale_8_3.png)
+```{r figure_8_3}
+plots_data[[2]]
+```
 
 ### 8.4 Top parameters for reduced bed days due to efficiencies
 
-![](scheme_output_reports/images/airedale_8_4.png)
+```{r figure_8_4}
+plots_data[[3]]
+```
 
 ### 9. Compound annual growth rates from BAU shifts
 

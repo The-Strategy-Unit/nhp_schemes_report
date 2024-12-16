@@ -251,3 +251,55 @@ item_17 <- ifelse(item_17 == 0, "N/A", item_17)
 
 # item18
 item_18 <- janitor::round_half_up((((baseline_ae + activity_avoidance_ae + efficiencies_ae) / baseline_ae)^(1 / years_to_forecast) - 1) * 100, digits = 2)
+
+
+# change factors plots ----------------------------------------------------
+
+prepare_all_principal_change_factors_plots <- function(
+    r,
+    site_codes = list(ip = NULL,  op = NULL, aae = NULL),  # character vectors
+    pcf
+) {
+  
+  
+  pcf_data <- prepare_all_principal_change_factors(r, site_codes)
+  
+  
+  dats <- list(pcf_data$ip, pcf_data$ip, pcf_data$ip, pcf_data$op, pcf_data$aae)
+  measures <- list("admissions", "beddays", "beddays", "attendances", "arrivals")
+  change_factors <- list(
+    "activity_avoidance",
+    "activity_avoidance",
+    "efficiencies",
+    "activity_avoidance",
+    "activity_avoidance"
+  )
+  
+  
+  possibly_plot_individual_change_factors <-
+    purrr::possibly(plot_individual_change_factors)
+  
+  
+  purrr::pmap(
+    list(dats, measures, change_factors),
+    \(dat, measure, change_factor) {
+      dat |>
+        possibly_plot_individual_change_factors(
+          measure = measure,
+          change_factor = change_factor
+        )
+    }
+  )
+  
+  
+}
+
+plots_data <- prepare_all_principal_change_factors_plots(output)
+
+purrr::walk2(
+  paste0(fig_dir, "/figure_8.", 2:6, ".png"),
+  plots_pcf,
+  \(filename, plot) {
+    ggplot2::ggsave(filename, plot, width = w, height = h)
+    cli::cli_text("- Wrote to {filename}")
+  }
