@@ -16,6 +16,7 @@ format:
       warning: false
       echo: false
   docx:
+    reference-doc: nhp_template_empty.docx
     toc: true
     number-sections: true
     highlight-style: github
