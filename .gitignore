@@ -9,5 +9,7 @@ images/*
 *.docx
 *.csv
 *.xlsx
+*.json
+*.json.gz
 output images (drafts)/*
 scheme_output_reports/*

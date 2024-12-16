@@ -208,7 +208,33 @@ We also compare a subset of the analysis from section 9 containing compound annu
 
 ### 8.1 Total impact of mitigation strategies
 
-![](scheme_output_reports/images/airedale_8_1.png)
+```{r outputs_processing}
+source("R/outputs_processing.R")
+```
+
+|                       | All admissions | Bed days     |
+|-----------------------|----------------|--------------|
+| Activity Avoidance    | `r item_7`%    | `r item_8`%  |
+| Efficiency Mitigation | `r item_9`%    | `r item_10`% |
+| All Mitigation        | `r item_11`%   | `r item_12`% |
+
+: Inpatients
+
+|                       | All attendances (F2F and virtual) |
+|-----------------------|-----------------------------------|
+| Activity Avoidance    | `r item_13`%                      |
+| Efficiency Mitigation | `r item_14`%                      |
+| All Mitigation        | `r item_15`%                      |
+
+: Outpatients
+
+|                       | A&E attendances |
+|-----------------------|-----------------|
+| Activity Avoidance    | `r item_16`%    |
+| Efficiency Mitigation | `r item_17`%    |
+| All Mitigation        | `r item_18`%    |
+
+: A&E
 
 ### 8.2 Top parameters for admission avoidance
 
