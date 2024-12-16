@@ -303,3 +303,4 @@ purrr::walk2(
     ggplot2::ggsave(filename, plot, width = w, height = h)
     cli::cli_text("- Wrote to {filename}")
   }
+)
