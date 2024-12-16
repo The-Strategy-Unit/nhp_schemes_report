@@ -254,7 +254,7 @@ plots_data[[2]]
 plots_data[[3]]
 ```
 
-### 9. Compound annual growth rates from BAU shifts
+### 11. Compound annual growth rates from BAU shifts
 
 | Measure                                                 | `r params$scheme_name` |
 |----------------------------------------------------|--------------------|
