@@ -102,3 +102,41 @@ get_stepcounts <- function(r_trust) {
   r_trust[["results"]][["step_counts"]]
 } 
 
+
+prepare_all_principal_change_factors_plots <- function(
+    r,
+    site_codes = list(ip = NULL,  op = NULL, aae = NULL),  # character vectors
+    pcf
+) {
+  
+  
+  pcf_data <- prepare_all_principal_change_factors(r, site_codes)
+  
+  
+  dats <- list(pcf_data$ip, pcf_data$ip, pcf_data$ip, pcf_data$op, pcf_data$aae)
+  measures <- list("admissions", "beddays", "beddays", "attendances", "arrivals")
+  change_factors <- list(
+    "activity_avoidance",
+    "activity_avoidance",
+    "efficiencies",
+    "activity_avoidance",
+    "activity_avoidance"
+  )
+  
+  
+  possibly_plot_individual_change_factors <-
+    purrr::possibly(plot_individual_change_factors)
+  
+  
+  purrr::pmap(
+    list(dats, measures, change_factors),
+    \(dat, measure, change_factor) {
+      dat |>
+        possibly_plot_individual_change_factors(
+          measure = measure,
+          change_factor = change_factor
+        )
+    }
+  )
+}
+
