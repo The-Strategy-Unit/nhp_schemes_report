@@ -4,6 +4,8 @@ purrr::walk(list.files("R/nhp_outputs", ".R$", , TRUE, TRUE), source)
 # load some of the functions from the final reports repo
 source("R/nhp_final_reports_functions.R")
 
+source("R/Azure.R")
+
 # function to load the data
 load_data <- function(scheme_code) {
   
