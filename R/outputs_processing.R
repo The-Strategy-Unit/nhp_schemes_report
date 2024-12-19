@@ -7,10 +7,14 @@ source("R/nhp_final_reports_functions.R")
 # function to load the data
 load_data <- function(scheme_code) {
   
-  # Load the JSON
-  output = paste0("scheme_output_jsons/", scheme_code, ".json") |>
-    jsonlite::read_json() |>
-    parse_results()
+  result_sets <- get_nhp_result_sets()
+  
+  selected_file <- result_sets |> 
+    dplyr::filter(
+      run_stage == "final_report_ndg2" & dataset == scheme_code) |> 
+    dplyr::pull(file)
+  
+  output <- get_nhp_results(file=selected_file)
   
   return(output)
 }
