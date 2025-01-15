@@ -184,6 +184,7 @@ nhp_tagged_runs_meta |>
   select(Trust = `Name of Trust`,
          Site = `Name of Hospital site`,
          `Trust code` = dataset,
+         `Scenario` = scenario,
          `Run stage` = run_stage,
          Date = create_datetime) |> 
   gt::gt() |> 
