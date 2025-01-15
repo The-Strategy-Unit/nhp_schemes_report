@@ -1,7 +1,6 @@
 ---
 params:
   scheme_code: NULL
-  scheme_name: NULL
 title: "Review of NHP scheme assumptions to reduce mitigatable activity"
 subtitle: "For roundtable discussion with `r params$scheme_name`"
 author: "Gabriel Hobro"
@@ -80,6 +79,11 @@ trust_code_lookup <- read.csv(
       ))|>
     # Ensure one row per trust - deals with Hampshire which appears twice
     dplyr::distinct(`Trust ODS Code`, .keep_all = TRUE)
+
+# deriving the name of the scheme from the code
+params$scheme_name <- trust_code_lookup |> 
+  filter(`Trust ODS Code` == params$scheme_code) |> 
+  pull(`Name of Hospital site`)
 ```
 
 ```{r wrangling}
