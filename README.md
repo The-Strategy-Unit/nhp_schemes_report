@@ -30,3 +30,5 @@ quarto::quarto_render(
 
 This will then produce a html output as well as a Word output using the file "nhp_template_empty.docx" as a template. 
 
+Then we amend the name of the Word output to something including the scheme's name prior to sharing.
+
