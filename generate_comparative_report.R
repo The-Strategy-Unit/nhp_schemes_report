@@ -1,5 +1,4 @@
-quarto::quarto_render(
-  "scheme_roundtable_comparative_report.qmd", 
-  execute_params = list(
-    scheme_code= "insert_scheme_code")
-  )
+source("generate_report_function.R")
+
+
+generate_report_function(selected_scheme_code = "insert_scheme_code_here")
