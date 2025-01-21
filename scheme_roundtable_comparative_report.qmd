@@ -2,7 +2,6 @@
 params:
   scheme_code: NULL
 title: "Review of NHP scheme assumptions to reduce mitigatable activity"
-subtitle: "For roundtable discussion with `r params$scheme_name`"
 author: "Gabriel Hobro"
 date: today
 format: 
@@ -81,10 +80,14 @@ trust_code_lookup <- read.csv(
     dplyr::distinct(`Trust ODS Code`, .keep_all = TRUE)
 
 # deriving the name of the scheme from the code
-params$scheme_name <- trust_code_lookup |> 
+selected_scheme_name <- trust_code_lookup |> 
   filter(`Trust ODS Code` == params$scheme_code) |> 
   pull(`Name of Hospital site`)
 ```
+
+---
+subtitle: "For roundtable discussion with `r selected_scheme_name`"
+---
 
 ```{r wrangling}
 # load the functions which are defined for the app developed by Data Science team
