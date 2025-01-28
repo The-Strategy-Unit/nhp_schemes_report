@@ -10,9 +10,7 @@ generate_report_function <- function(selected_scheme_code) {
       dest = "nhp_template_empty.docx"
     )
   }
-  
-  # add an if-else for the nhp template
-  # use the code from Matt for accessing Azure and loading a Word document
+
   datetime <- format(Sys.time(), "%Y-%m-%d-%H%M%S")
   file_name <- paste0(selected_scheme_code, "_", datetime, ".docx")
   
