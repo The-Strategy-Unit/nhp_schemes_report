@@ -28,10 +28,13 @@ extract_params <- function(params, runs_meta) {
   
 }
 
-correct_day_procedures <- function(x) {
+# Rename or remove older versions of daycase mitigators if they exist
+# Assumes mitigators are in 'strrategy' column, scheme codes in 'peer' column
+correct_day_procedures <- function(df_with_strategies) {
+  
   
   # Identify pairs of bads/day_procedures mitigators with flag
-  flagged <- x |>
+  flagged <- df_with_strategies |>
     dplyr::mutate(
       mitigator_code_flag = dplyr::case_when(
         stringr::str_detect(
@@ -54,6 +57,7 @@ correct_day_procedures <- function(x) {
       )
     )
   
+  
   # Identify where a peer has more than one instance of the code, i.e. the
   # mitigator is represented by both a bads and a day_procedures version. We'll
   # use this info to filter out the bads version.
@@ -62,15 +66,19 @@ correct_day_procedures <- function(x) {
     tidyr::drop_na(mitigator_code_flag) |>
     dplyr::filter(n > 1)
   
+  
   # Remove bads mitigators if there's a day_procedures replacement for it
-  for (i in seq(nrow(dupes))) {
-    flagged <- flagged |>
-      dplyr::filter(
-        !(peer == dupes[[i, "peer"]] &
-            mitigator_code_flag == dupes[[i, "mitigator_code_flag"]] &
-            stringr::str_detect(strategy, "^bads_"))
-      )
+  if (nrow(dupes) > 0) {
+    for (i in seq(nrow(dupes))) {
+      flagged <- flagged |>
+        dplyr::filter(
+          !(peer == dupes[[i, "peer"]] &
+              mitigator_code_flag == dupes[[i, "mitigator_code_flag"]] &
+              stringr::str_detect(strategy, "^bads_"))
+        )
+    }
   }
+  
   
   # Remaining bads mitigators clearly don't have a replacement day_procedures
   # version so we can just rename these ones.
@@ -86,6 +94,7 @@ correct_day_procedures <- function(x) {
       )
     ) |>
     dplyr::select(-mitigator_code_flag)  # remove helper column
+  
   
 }
 

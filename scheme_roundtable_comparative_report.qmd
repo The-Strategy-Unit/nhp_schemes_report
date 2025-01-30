@@ -1,25 +1,27 @@
 ---
+params:
+  scheme_code: NULL
 title: "Review of NHP scheme assumptions to reduce mitigatable activity"
-subtitle: "For roundtable discussion with Airedale"
 author: "Gabriel Hobro"
 date: today
 format: 
-  html:
-    embed-resources: true
-    toc: true
-    #code-fold: true
-    execute:
-      message: false
-      warning: false
-      echo: false
-  # docx:
+  # html:
+  #   embed-resources: true
   #   toc: true
-  #   number-sections: true
-  #   highlight-style: github
+  #   #code-fold: true
   #   execute:
   #     message: false
   #     warning: false
   #     echo: false
+  docx:
+    reference-doc: nhp_template_empty.docx
+    toc: true
+    number-sections: true
+    highlight-style: github
+    execute:
+      message: false
+      warning: false
+      echo: false
     
 editor: visual
 ---
@@ -76,7 +78,16 @@ trust_code_lookup <- read.csv(
       ))|>
     # Ensure one row per trust - deals with Hampshire which appears twice
     dplyr::distinct(`Trust ODS Code`, .keep_all = TRUE)
+
+# deriving the name of the scheme from the code
+selected_scheme_name <- trust_code_lookup |> 
+  filter(`Trust ODS Code` == params$scheme_code) |> 
+  pull(`Name of Hospital site`)
 ```
+
+---
+subtitle: "For roundtable discussion with `r selected_scheme_name`"
+---
 
 ```{r wrangling}
 # load the functions which are defined for the app developed by Data Science team
@@ -130,10 +141,20 @@ baseline_inputs_data <- left_join(dat, baseline,
 
 # Summary / discussion
 
-```{r }
-markdown::mark("scheme_text_markdown/airedale.md", output = FALSE, template = FALSE)
-```
+```{r discussion}
+#| output: asis
+#| echo: false
 
+# Define the file path for the commentary
+commentary_file <- paste0("scheme_text_markdown/", params$scheme_code, ".md")
+
+# Check if the file exists and include it
+if (file.exists(commentary_file)) {
+  readLines(commentary_file) |> cat(sep = "\n")
+} else {
+  cat("No commentary available for this input.")
+}
+```
 
 # Overview
 
@@ -141,33 +162,12 @@ markdown::mark("scheme_text_markdown/airedale.md", output = FALSE, template = FA
 
 The purpose of this report is to compare individual scheme's inputs to the NHP Demand and Capacity Model. We consider 4 areas by which to compare the inputs: parameter coverage, value, certainty, and credibility given the National Elicitation Exercise (NEE):
 
-<table>
-<thead>
-<tr class="header">
-<th><p>Area of analysis</p></th>
-<th><p>Scheme-level</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><p><strong>Parameter coverage</strong></p></td>
-<td><p>What proportion of parameters has each scheme selected?</p></td>
-</tr>
-<tr class="even">
-<td><p><strong>Parameter value</strong></p></td>
-<td><p>What is the average value of each schemes selected parameters?</p></td>
-</tr>
-<tr class="odd">
-<td><p><strong>Parameter certainty</strong></p></td>
-<td><p>What is the is the average certainty of each schemes selected parameters?</p></td>
-</tr>
-<tr class="even">
-<td><p><strong>Parameter credibility</strong></p>
-<p><strong>(NEE comparison)</strong></p></td>
-<td><p>How do each schemes parameter selections compare to the the NEE mid-point?</p></td>
-</tr>
-</tbody>
-</table>
+| Area of analysis      | Question                                                                   |
+|-----------------------|----------------------------------------------------------------------------|
+| Parameter coverage    | What proportion of parameters has each scheme selected?                    |
+| Parameter value       | What is the average value of each schemes selected parameters?             |
+| Parameter certainty   | What is the is the average certainty of each schemes selected parameters?  |
+| Parameter credibility | How do each schemes parameter selections compare to the the NEE mid-point? |
 
 ## Parameters in analysis
 
@@ -187,6 +187,7 @@ nhp_tagged_runs_meta |>
   select(Trust = `Name of Trust`,
          Site = `Name of Hospital site`,
          `Trust code` = dataset,
+         `Scenario` = scenario,
          `Run stage` = run_stage,
          Date = create_datetime) |> 
   gt::gt() |> 
@@ -195,13 +196,7 @@ nhp_tagged_runs_meta |>
 
 # Scheme-level analyses
 
-```{r scheme}
-selected_scheme_code <- "RCF"
-selected_scheme_name <- "Airedale"
-
-```
-
-Below we present scheme-level analyses. `r selected_scheme_name` is highlighted in blue.
+Below we present scheme-level analyses. `r params$scheme_name` is highlighted in blue.
 
 ```{r highlight_schemes}
 highlight_schemes <- function(data, scheme) {
@@ -221,27 +216,75 @@ We also compare a subset of the analysis from section 9 containing compound annu
 
 ### 8.1 Total impact of mitigation strategies
 
-![](scheme_output_reports/images/airedale_8_1.png)
+```{r outputs_processing}
+source("R/outputs_processing.R")
+
+data <- load_data(params$scheme_code)
+
+forecast_length <- calculate_forecast_length(data)
+
+df <- produce_change_factor_df(data)
+
+values_table <- generate_values_table(df, forecast_length = forecast_length)
+
+values_list <- generate_values_list(values_table)
+
+bau_productivity_los_cagr <- calculate_general_los_productivity_cagr(df, forecast_length)
+
+plots <- prepare_all_principal_change_factors_plots(data)
+
+
+```
+
+|                       | All admissions                                                                        | Bed days                                                                           |
+|--------------------|---------------------------|---------------------------|
+| Activity Avoidance    | `r scales::percent(values_list$ip_admissions$activity_avoidance_pc, accuracy = 0.01)` | `r scales::percent(values_list$ip_beddays$activity_avoidance_pc, accuracy = 0.01)` |
+| Efficiency Mitigation | `r scales::percent(values_list$ip_admissions$efficiencies_pc, accuracy = 0.01)`       | `r scales::percent(values_list$ip_beddays$efficiencies_pc, accuracy = 0.01)`       |
+| All Mitigation        | `r scales::percent(values_list$ip_admissions$all_mitigation_pc, accuracy = 0.01)`     | `r scales::percent(values_list$ip_beddays$all_mitigation_pc, accuracy = 0.01)`     |
+
+: Inpatients
+
+|                       | All attendances (F2F and virtual)                                                      |
+|------------------------|------------------------------------------------|
+| Activity Avoidance    | `r scales::percent(values_list$op_attendances$activity_avoidance_pc, accuracy = 0.01)` |
+| Efficiency Mitigation | `r scales::percent(values_list$op_attendances$efficiencies_pc, accuracy = 0.01)`       |
+| All Mitigation        | `r scales::percent(values_list$op_attendances$all_mitigation_pc, accuracy = 0.01)`     |
+
+: Outpatients
+
+|                       | A&E attendances                                                                         |
+|------------------------|------------------------------------------------|
+| Activity Avoidance    | `r scales::percent(values_list$aae_attendances$activity_avoidance_pc, accuracy = 0.01)` |
+| Efficiency Mitigation | `r scales::percent(values_list$aae_attendances$efficiencies_pc, accuracy = 0.01)`       |
+| All Mitigation        | `r scales::percent(values_list$aae_attendances$all_mitigation_pc, accuracy = 0.01)`     |
+
+: A&E
 
 ### 8.2 Top parameters for admission avoidance
 
-![](scheme_output_reports/images/airedale_8_2.png)
+```{r figure_8_2}
+plots[[1]]
+```
 
 ### 8.3 Top parameters for reduced bed days due to avoidance
 
-![](scheme_output_reports/images/airedale_8_3.png)
+```{r figure_8_3}
+plots[[2]]
+```
 
 ### 8.4 Top parameters for reduced bed days due to efficiencies
 
-![](scheme_output_reports/images/airedale_8_4.png)
+```{r figure_8_4}
+plots[[3]]
+```
 
-### 9. Compound annual growth rates from BAU shifts
+### 11. Compound annual growth rates from BAU shifts
 
-| Measure                                                 | `r selected_scheme_name` |
-|----------------------------------------------------|--------------------|
-| Assumed BAU admissions avoided as CAGR                  |                   |
-| Assumed BAU resultant beddays avoided as CAGR           |                    |
-| Assumed BAU productivity as CAGR for overall LOS impact |                     |
+| Measure                                                 | `r params$scheme_name`                                                                |
+|-------------------------------------|-----------------------------------|
+| Assumed BAU admissions avoided as CAGR                  | `r scales::percent(values_list$ip_admissions$activity_avoidance_pc, accuracy = 0.01)` |
+| Assumed BAU resultant beddays avoided as CAGR           | `r scales::percent(values_list$ip_beddays$activity_avoidance_pc, accuracy = 0.01)`    |
+| Assumed BAU productivity as CAGR for overall LOS impact | `r scales::percent(bau_productivity_los_cagr, accuracy = 0.01)`                       |
 
 ## How many parameter set compared to other participating schemes
 
@@ -253,7 +296,7 @@ mitigator_coverage_by_scheme <- dat |>
   count(scheme_code,scheme_name) 
 
 mitigator_coverage_by_scheme |> 
-  highlight_schemes(selected_scheme_code) |> 
+  highlight_schemes(params$scheme_code) |> 
   ggplot() +
   geom_bar(aes(x=n, y=reorder(scheme_name, n), fill=color_fill), 
            stat="identity") +
@@ -278,7 +321,7 @@ mitigator_ambition_by_scheme <- dat |>
             .by = c(scheme_code, scheme_name))
 
 mitigator_ambition_by_scheme |> 
-  highlight_schemes(selected_scheme_code) |> 
+  highlight_schemes(params$scheme_code) |> 
   ggplot() +
   geom_bar(aes(x=average_ambition, y=reorder(scheme_name, average_ambition, decreasing = TRUE), fill=color_fill), 
            stat="identity") +
@@ -306,7 +349,7 @@ mitigator_certainty_by_scheme <- dat |>
             .by = c(scheme_code, scheme_name))
 
 mitigator_certainty_by_scheme |> 
-  highlight_schemes(selected_scheme_code) |> 
+  highlight_schemes(params$scheme_code) |> 
   ggplot() +
   geom_bar(aes(x=average_range, y=reorder(scheme_name, average_range, decreasing= TRUE), fill=color_fill), 
            stat="identity") +
@@ -339,7 +382,7 @@ nee_comparison_by_scheme |>
   group_by(scheme_code, scheme_name) |> 
   mutate(p = n/sum(n)) |> 
   filter(nee_comparison == "As or more ambitious") |> 
-  highlight_schemes(selected_scheme_code) |> 
+  highlight_schemes(params$scheme_code) |> 
   ggplot() +
   geom_bar(aes(x=p, y=reorder(scheme_name,p), fill=color_fill), 
            stat="identity", 
@@ -364,13 +407,13 @@ source("R/missing_mitigators_by_scheme.R")
 
 All `r nrow(mitigator_lookup)` parameters were selected at least once by a scheme.
 
-The following table indicate unselected parameters for `r selected_scheme_name`.
+The following table indicate unselected parameters for `r params$scheme_name`.
 
 We have filtered this to where at least half of the `r n_schemes` schemes have selected the parameter.
 
 ```{r unset_parameters}
 missing_mitigators_by_scheme |> 
-  filter(scheme_code == selected_scheme_code) |>
+  filter(scheme_code == params$scheme_code) |>
   filter(total_incidence >= n_schemes / 2) |>
   arrange(scheme_code, desc(total_incidence)) |>
   select(!scheme_code) |>
@@ -385,7 +428,7 @@ missing_mitigators_by_scheme |>
 
 ### Particularly notable scheme assumptions
 
-The following table indicates the parameters set by `r selected_scheme_name` that assumed significantly more mitigation than its average.
+The following table indicates the parameters set by `r params$scheme_name` that assumed significantly more mitigation than its average.
 
 For a given scheme, we define this as a being more than 1.96 standard deviations away from the mean of its inputs.
 
@@ -399,7 +442,7 @@ outlier_mitigators_by_scheme <- dat |>
   select(scheme_code,scheme_name,mitigator_group, mitigator_name, value_mid, mean_value, sd)
 
 outlier_mitigators_by_scheme |> 
-  filter(scheme_code == selected_scheme_code) |>
+  filter(scheme_code == params$scheme_code) |>
   select(-scheme_code) |> 
   gt::gt() |> 
   gt::tab_header("Parameters with significantly higher reductions") |> 
