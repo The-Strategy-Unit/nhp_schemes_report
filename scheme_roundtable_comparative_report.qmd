@@ -37,6 +37,17 @@ library(tidyr)
 ```
 
 ```{r loading_data}
+# load in Azure functions
+source("R/azure.R")
+
+# load the functions which are defined for the app developed by Data Science team
+# https://github.com/The-Strategy-Unit/nhp_inputs_report_app/blob/main/R/fct_tabulate.R
+source("R/fct tabulate.R")
+
+
+# bucket of Azure supporting data
+container_support <- get_container(container_name = Sys.getenv("AZ_STORAGE_CONTAINER_SUPPORT"))
+
 # establish a connection to the board containing the data
 board <- pins::board_connect()
 
@@ -52,32 +63,16 @@ nhp_tagged_runs_params <- pins::pin_read(
 nhp_tagged_runs_meta <- pins::pin_read(
   board, "matt.dray/nhp_tagged_runs_meta")
 
+
 # loading the NEE data
-nee_results <- readRDS(here("data","nee_table.Rds"))
+nee_results <- container_support |> AzureStor::storage_load_rds("nee_table.rds", type = "none")
 
 # loading the mitigator lookup
-mitigator_lookup <- read.csv(
-  here(
-    "data",
-    "mitigator-lookup.csv"), 
-  check.names = FALSE)
+mitigator_lookup <- container_support |>
+  AzureStor::storage_read_csv("mitigator-lookup.csv", show_col_types = FALSE)
 
 # loading the trust code lookup
-trust_code_lookup <- read.csv(
-  here(
-    "data",
-    "nhp-scheme-lookup.csv"), 
-  check.names = FALSE) |> 
-  # Imperial College (RYJ) appears three times due to different hospital
-  # sites, so simplify to one row
-  dplyr::mutate(
-      `Name of Hospital site` = dplyr::case_match(
-        `Trust ODS Code`,
-        'RYJ' ~ 'Imperial',
-        .default = `Name of Hospital site`
-      ))|>
-    # Ensure one row per trust - deals with Hampshire which appears twice
-    dplyr::distinct(`Trust ODS Code`, .keep_all = TRUE)
+trust_code_lookup <- get_trust_lookup(container_support = container_support)
 
 # deriving the name of the scheme from the code
 selected_scheme_name <- trust_code_lookup |> 
@@ -90,11 +85,6 @@ subtitle: "For roundtable discussion with `r selected_scheme_name`"
 ---
 
 ```{r wrangling}
-# load the functions which are defined for the app developed by Data Science team
-# https://github.com/The-Strategy-Unit/nhp_inputs_report_app/blob/main/R/fct_tabulate.R
-
-source("R/fct tabulate.R")
-
 # derive the cleaned data frame (same as that being used for Shiny app)
 extracted_params <- extract_params(nhp_tagged_runs_params, nhp_tagged_runs_meta)
 skeleton_table <- prepare_skeleton_table(extracted_params)
@@ -163,7 +153,7 @@ if (file.exists(commentary_file)) {
 The purpose of this report is to compare individual scheme's inputs to the NHP Demand and Capacity Model. We consider 4 areas by which to compare the inputs: parameter coverage, value, certainty, and credibility given the National Elicitation Exercise (NEE):
 
 | Area of analysis      | Question                                                                   |
-|-----------------------|----------------------------------------------------------------------------|
+|------------------|------------------------------------------------------|
 | Parameter coverage    | What proportion of parameters has each scheme selected?                    |
 | Parameter value       | What is the average value of each schemes selected parameters?             |
 | Parameter certainty   | What is the is the average certainty of each schemes selected parameters?  |
@@ -237,7 +227,7 @@ plots <- prepare_all_principal_change_factors_plots(data)
 ```
 
 |                       | All admissions                                                                        | Bed days                                                                           |
-|--------------------|---------------------------|---------------------------|
+|--------------------|--------------------------|--------------------------|
 | Activity Avoidance    | `r scales::percent(values_list$ip_admissions$activity_avoidance_pc, accuracy = 0.01)` | `r scales::percent(values_list$ip_beddays$activity_avoidance_pc, accuracy = 0.01)` |
 | Efficiency Mitigation | `r scales::percent(values_list$ip_admissions$efficiencies_pc, accuracy = 0.01)`       | `r scales::percent(values_list$ip_beddays$efficiencies_pc, accuracy = 0.01)`       |
 | All Mitigation        | `r scales::percent(values_list$ip_admissions$all_mitigation_pc, accuracy = 0.01)`     | `r scales::percent(values_list$ip_beddays$all_mitigation_pc, accuracy = 0.01)`     |
@@ -245,7 +235,7 @@ plots <- prepare_all_principal_change_factors_plots(data)
 : Inpatients
 
 |                       | All attendances (F2F and virtual)                                                      |
-|------------------------|------------------------------------------------|
+|------------------------|-----------------------------------------------|
 | Activity Avoidance    | `r scales::percent(values_list$op_attendances$activity_avoidance_pc, accuracy = 0.01)` |
 | Efficiency Mitigation | `r scales::percent(values_list$op_attendances$efficiencies_pc, accuracy = 0.01)`       |
 | All Mitigation        | `r scales::percent(values_list$op_attendances$all_mitigation_pc, accuracy = 0.01)`     |
@@ -253,7 +243,7 @@ plots <- prepare_all_principal_change_factors_plots(data)
 : Outpatients
 
 |                       | A&E attendances                                                                         |
-|------------------------|------------------------------------------------|
+|------------------------|-----------------------------------------------|
 | Activity Avoidance    | `r scales::percent(values_list$aae_attendances$activity_avoidance_pc, accuracy = 0.01)` |
 | Efficiency Mitigation | `r scales::percent(values_list$aae_attendances$efficiencies_pc, accuracy = 0.01)`       |
 | All Mitigation        | `r scales::percent(values_list$aae_attendances$all_mitigation_pc, accuracy = 0.01)`     |
