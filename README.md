@@ -4,16 +4,20 @@ A report for the NHP into the general state of play regarding NHP schemes' input
 
 ## Prerequisites
 
-The following files are required are required to be stored locally for this report to render:
+The following files are required to be stored locally for this report to render:
 
--   data/golem-config.yml
--   data/mitigator-lookup.csv
+-   data/golem-config.yml 
 -   data/mitigators.json
--   data/nee_table.Rds
--   data/nhp-scheme-lookup.csv
--   nhp_template_empty.docx
 
 Please request these from the data science team if you do not have them.
+
+We access the following files from Azure:
+
+-   the mitigators look-up
+-   the results of the NEE exercise
+-   the look-up of NHP schemes
+-   the schemes' outputs data
+-   the blank NHP template (this will only be downloaded if not already present)
 
 To access the Azure containers, create a `.Renviron` file in the project root using `.Renviron.sample` as a template.
 
