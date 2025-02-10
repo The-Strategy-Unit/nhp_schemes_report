@@ -35,4 +35,6 @@ For example, if we wanted to generate the report for Frimley (RDU), we would run
 
 This will then produce a Word output using the file "nhp_template_empty.docx" as a template.
 
+To write an executive summary of the report, create a .md file with the scheme code as its name in the folder "scheme_text_markdown/" and write a set of bullets summarising the contents of the report - for example, in the case of Frimley we would create the following file "scheme_text_markdown/RDU.md". You may find it easier to initially run the Quarto file chunk by chunk and write the commentary before saving and then running `generate_report_function()` to generate the final report.
+
 Subsequently, you can move the Word output to the subfolder "outputs/" after proof reading.
