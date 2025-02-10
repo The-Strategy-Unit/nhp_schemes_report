@@ -2,7 +2,10 @@ generate_report_function <- function(selected_scheme_code) {
   
   # check for the template file 
   # if missing, download from Azure
+  
+  
   if(!file.exists("nhp_template_empty.docx")) {
+    source("R/azure.R")
     
     AzureStor::storage_download(
       container = get_container(container_name = Sys.getenv("AZ_STORAGE_CONTAINER_SUPPORT")),
