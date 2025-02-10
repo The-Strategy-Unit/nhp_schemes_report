@@ -21,7 +21,7 @@ We access the following files from Azure:
 
 To access the Azure containers, create a `.Renviron` file in the project root using `.Renviron.sample` as a template.
 
-Ask a member of the Data Science team for the values required by each variable.
+[Ask a member of the Data Science team](mailto:mlcsu.su.datascience@nhs.net) for the values required by each variable.
 
 During this process, you'll be prompted to authorise with Azure through the browser. See [the Data Science website](https://the-strategy-unit.github.io/data_science/presentations/2024-05-16_store-data-safely/#/authenticating-to-azure-data-storage) for detail on authorisation.
 
