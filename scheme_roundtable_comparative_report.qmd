@@ -193,6 +193,8 @@ There are 92 parameters for activity mitigation in the model. These are grouped 
 
 The following schemes have completed the exercise.
 
+Please note that the model run used for West Suffolk (RGR) is not the defined Final run as used by the [NHP mitigator comparisons app](https://connect.strategyunitwm.nhs.uk/nhp/mitigator-comparisons/).
+
 ```{r site_list}
 n_schemes <- nrow(nhp_tagged_runs_meta)
 nhp_tagged_runs_meta |> 
