@@ -84,6 +84,32 @@ selected_scheme_name <- trust_code_lookup |>
 subtitle: "For roundtable discussion with `r selected_scheme_name`"
 ---
 
+```{r west_suffolk_substitution}
+source("R/outputs_processing.R")
+
+# The file path of the specific model run we wish to substitute in for West Suffolk
+west_suffolk_run_path <- "prod/v3.0/RGR/20241121-WSFT-ndg2-v04-20241121_142013.json.gz"
+
+# Get the list of results
+result_sets = get_nhp_result_sets()
+
+# Extract this specific model run
+west_suffolk_run_data <- get_nhp_results(file=west_suffolk_run_path)
+
+# We substitute in for West Suffolk (ODC code: RGR)
+nhp_tagged_runs_params$RGR <- west_suffolk_run_data$params
+
+# We manually extract the meta data of this run
+west_suffolf_meta <- result_sets |> dplyr::filter(file=="prod/v3.0/RGR/20241121-WSFT-ndg2-v04-20241121_142013.json.gz") |> 
+  select(dataset, scenario, create_datetime, run_stage, file) |> 
+  mutate(run_stage = "*")
+
+# and substitute it in to the meta data file
+nhp_tagged_runs_meta <- nhp_tagged_runs_meta |> 
+  filter(dataset != "RGR") |> 
+  bind_rows(west_suffolf_meta)
+```
+
 ```{r wrangling}
 # derive the cleaned data frame (same as that being used for Shiny app)
 extracted_params <- extract_params(nhp_tagged_runs_params, nhp_tagged_runs_meta)
