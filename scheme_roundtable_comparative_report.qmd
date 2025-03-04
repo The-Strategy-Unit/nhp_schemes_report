@@ -179,7 +179,7 @@ if (file.exists(commentary_file)) {
 The purpose of this report is to compare individual scheme's inputs to the NHP Demand and Capacity Model. We consider 4 areas by which to compare the inputs: parameter coverage, value, certainty, and credibility given the National Elicitation Exercise (NEE):
 
 | Area of analysis      | Question                                                                   |
-|------------------|------------------------------------------------------|
+|-------------------|-----------------------------------------------------|
 | Parameter coverage    | What proportion of parameters has each scheme selected?                    |
 | Parameter value       | What is the average value of each schemes selected parameters?             |
 | Parameter certainty   | What is the is the average certainty of each schemes selected parameters?  |
@@ -225,84 +225,6 @@ highlight_schemes <- function(data, scheme) {
 }
 
 ```
-
-## Output report excerpts
-
-For added context, we present excerpts from the schemes' output reports for figures 8.1 (mitigator impact), 8.2 (top parameters for reduced admisisons due to activity avoidance), 8.3 (top parameters for reduced bed days due to activity avoidance), and 8.4 (top parameters for reduced bed days due to efficiences)
-
-We also compare a subset of the analysis from section 9 containing compound annual growth rates (CAGRs) from BAU shifts.
-
-### 8.1 Total impact of mitigation strategies
-
-```{r outputs_processing}
-source("R/outputs_processing.R")
-
-data <- load_data(params$scheme_code)
-
-forecast_length <- calculate_forecast_length(data)
-
-df <- produce_change_factor_df(data)
-
-values_table <- generate_values_table(df, forecast_length = forecast_length)
-
-values_list <- generate_values_list(values_table)
-
-bau_productivity_los_cagr <- calculate_general_los_productivity_cagr(df, forecast_length)
-
-plots <- prepare_all_principal_change_factors_plots(data)
-
-
-```
-
-|                       | All admissions                                                                        | Bed days                                                                           |
-|--------------------|--------------------------|--------------------------|
-| Activity Avoidance    | `r scales::percent(values_list$ip_admissions$activity_avoidance_pc, accuracy = 0.01)` | `r scales::percent(values_list$ip_beddays$activity_avoidance_pc, accuracy = 0.01)` |
-| Efficiency Mitigation | `r scales::percent(values_list$ip_admissions$efficiencies_pc, accuracy = 0.01)`       | `r scales::percent(values_list$ip_beddays$efficiencies_pc, accuracy = 0.01)`       |
-| All Mitigation        | `r scales::percent(values_list$ip_admissions$all_mitigation_pc, accuracy = 0.01)`     | `r scales::percent(values_list$ip_beddays$all_mitigation_pc, accuracy = 0.01)`     |
-
-: Inpatients
-
-|                       | All attendances (F2F and virtual)                                                      |
-|------------------------|-----------------------------------------------|
-| Activity Avoidance    | `r scales::percent(values_list$op_attendances$activity_avoidance_pc, accuracy = 0.01)` |
-| Efficiency Mitigation | `r scales::percent(values_list$op_attendances$efficiencies_pc, accuracy = 0.01)`       |
-| All Mitigation        | `r scales::percent(values_list$op_attendances$all_mitigation_pc, accuracy = 0.01)`     |
-
-: Outpatients
-
-|                       | A&E attendances                                                                         |
-|------------------------|-----------------------------------------------|
-| Activity Avoidance    | `r scales::percent(values_list$aae_attendances$activity_avoidance_pc, accuracy = 0.01)` |
-| Efficiency Mitigation | `r scales::percent(values_list$aae_attendances$efficiencies_pc, accuracy = 0.01)`       |
-| All Mitigation        | `r scales::percent(values_list$aae_attendances$all_mitigation_pc, accuracy = 0.01)`     |
-
-: A&E
-
-### 8.2 Top parameters for admission avoidance
-
-```{r figure_8_2}
-plots[[1]]
-```
-
-### 8.3 Top parameters for reduced bed days due to avoidance
-
-```{r figure_8_3}
-plots[[2]]
-```
-
-### 8.4 Top parameters for reduced bed days due to efficiencies
-
-```{r figure_8_4}
-plots[[3]]
-```
-
-### 11. Compound annual growth rates from BAU shifts
-
-| Measure                                                 | `r params$scheme_name`                                                                |
-|-------------------------------------|-----------------------------------|
-| Assumed BAU admissions avoided as CAGR                  | `r scales::percent(values_list$ip_admissions$activity_avoidance_pc, accuracy = 0.01)` |
-| Assumed BAU resultant beddays avoided as CAGR           | `r scales::percent(values_list$ip_beddays$activity_avoidance_pc, accuracy = 0.01)`    |
-| Assumed BAU productivity as CAGR for overall LOS impact | `r scales::percent(bau_productivity_los_cagr, accuracy = 0.01)`                       |
 
 ## How many parameter set compared to other participating schemes
 
