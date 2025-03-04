@@ -15,7 +15,7 @@ generate_report_function <- function(selected_scheme_code) {
   }
 
   datetime <- format(Sys.time(), "%Y-%m-%d-%H%M%S")
-  file_name <- paste0(selected_scheme_code, "_", datetime, ".docx")
+  file_name <- paste0(selected_scheme_code, "_", datetime, ".html")
   
   quarto::quarto_render(
     input = "scheme_roundtable_comparative_report.qmd", 
