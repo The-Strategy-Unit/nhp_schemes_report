@@ -5,23 +5,23 @@ title: "Review of NHP scheme assumptions to reduce mitigatable activity"
 author: "Gabriel Hobro"
 date: today
 format: 
-  # html:
-  #   embed-resources: true
-  #   toc: true
-  #   #code-fold: true
-  #   execute:
-  #     message: false
-  #     warning: false
-  #     echo: false
-  docx:
-    reference-doc: nhp_template_empty.docx
+  html:
+    embed-resources: true
     toc: true
-    number-sections: true
-    highlight-style: github
+    #code-fold: true
     execute:
       message: false
       warning: false
       echo: false
+  # docx:
+  #   reference-doc: nhp_template_empty.docx
+  #   toc: true
+  #   number-sections: true
+  #   highlight-style: github
+  #   execute:
+  #     message: false
+  #     warning: false
+  #     echo: false
     
 editor: visual
 ---
