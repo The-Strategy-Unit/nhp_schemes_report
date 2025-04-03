@@ -5,14 +5,14 @@ title: "Review of NHP scheme assumptions to reduce mitigatable activity"
 author: "Gabriel Hobro"
 date: today
 format: 
-  # html:
-  #   embed-resources: true
-  #   toc: true
-  #   #code-fold: true
-  #   execute:
-  #     message: false
-  #     warning: false
-  #     echo: false
+  html:
+    embed-resources: true
+    toc: true
+    code-fold: true
+    execute:
+      message: false
+      warning: false
+      echo: false
   docx:
     reference-doc: nhp_template_empty.docx
     toc: true
@@ -152,11 +152,11 @@ if (file.exists(commentary_file)) {
 
 The purpose of this report is to compare individual scheme's inputs to the NHP Demand and Capacity Model. We consider 4 areas by which to compare the inputs: parameter coverage, value, certainty, and credibility given the National Elicitation Exercise (NEE):
 
-| Area of analysis      | Question                                                                   |
-|------------------|------------------------------------------------------|
-| Parameter coverage    | What proportion of parameters has each scheme selected?                    |
-| Parameter value       | What is the average value of each schemes selected parameters?             |
-| Parameter certainty   | What is the is the average certainty of each schemes selected parameters?  |
+| Area of analysis | Question |
+|-------------------|-----------------------------------------------------|
+| Parameter coverage | What proportion of parameters has each scheme selected? |
+| Parameter value | What is the average value of each schemes selected parameters? |
+| Parameter certainty | What is the is the average certainty of each schemes selected parameters? |
 | Parameter credibility | How do each schemes parameter selections compare to the the NEE mid-point? |
 
 ## Parameters in analysis
@@ -226,27 +226,27 @@ plots <- prepare_all_principal_change_factors_plots(data)
 
 ```
 
-|                       | All admissions                                                                        | Bed days                                                                           |
+|   | All admissions | Bed days |
 |--------------------|--------------------------|--------------------------|
-| Activity Avoidance    | `r scales::percent(values_list$ip_admissions$activity_avoidance_pc, accuracy = 0.01)` | `r scales::percent(values_list$ip_beddays$activity_avoidance_pc, accuracy = 0.01)` |
-| Efficiency Mitigation | `r scales::percent(values_list$ip_admissions$efficiencies_pc, accuracy = 0.01)`       | `r scales::percent(values_list$ip_beddays$efficiencies_pc, accuracy = 0.01)`       |
-| All Mitigation        | `r scales::percent(values_list$ip_admissions$all_mitigation_pc, accuracy = 0.01)`     | `r scales::percent(values_list$ip_beddays$all_mitigation_pc, accuracy = 0.01)`     |
+| Activity Avoidance | `r scales::percent(values_list$ip_admissions$activity_avoidance_pc, accuracy = 0.01)` | `r scales::percent(values_list$ip_beddays$activity_avoidance_pc, accuracy = 0.01)` |
+| Efficiency Mitigation | `r scales::percent(values_list$ip_admissions$efficiencies_pc, accuracy = 0.01)` | `r scales::percent(values_list$ip_beddays$efficiencies_pc, accuracy = 0.01)` |
+| All Mitigation | `r scales::percent(values_list$ip_admissions$all_mitigation_pc, accuracy = 0.01)` | `r scales::percent(values_list$ip_beddays$all_mitigation_pc, accuracy = 0.01)` |
 
 : Inpatients
 
-|                       | All attendances (F2F and virtual)                                                      |
-|------------------------|-----------------------------------------------|
-| Activity Avoidance    | `r scales::percent(values_list$op_attendances$activity_avoidance_pc, accuracy = 0.01)` |
-| Efficiency Mitigation | `r scales::percent(values_list$op_attendances$efficiencies_pc, accuracy = 0.01)`       |
-| All Mitigation        | `r scales::percent(values_list$op_attendances$all_mitigation_pc, accuracy = 0.01)`     |
+|   | All attendances (F2F and virtual) |
+|-------------------------|-----------------------------------------------|
+| Activity Avoidance | `r scales::percent(values_list$op_attendances$activity_avoidance_pc, accuracy = 0.01)` |
+| Efficiency Mitigation | `r scales::percent(values_list$op_attendances$efficiencies_pc, accuracy = 0.01)` |
+| All Mitigation | `r scales::percent(values_list$op_attendances$all_mitigation_pc, accuracy = 0.01)` |
 
 : Outpatients
 
-|                       | A&E attendances                                                                         |
-|------------------------|-----------------------------------------------|
-| Activity Avoidance    | `r scales::percent(values_list$aae_attendances$activity_avoidance_pc, accuracy = 0.01)` |
-| Efficiency Mitigation | `r scales::percent(values_list$aae_attendances$efficiencies_pc, accuracy = 0.01)`       |
-| All Mitigation        | `r scales::percent(values_list$aae_attendances$all_mitigation_pc, accuracy = 0.01)`     |
+|   | A&E attendances |
+|-------------------------|-----------------------------------------------|
+| Activity Avoidance | `r scales::percent(values_list$aae_attendances$activity_avoidance_pc, accuracy = 0.01)` |
+| Efficiency Mitigation | `r scales::percent(values_list$aae_attendances$efficiencies_pc, accuracy = 0.01)` |
+| All Mitigation | `r scales::percent(values_list$aae_attendances$all_mitigation_pc, accuracy = 0.01)` |
 
 : A&E
 
@@ -270,11 +270,11 @@ plots[[3]]
 
 ### 11. Compound annual growth rates from BAU shifts
 
-| Measure                                                 | `r params$scheme_name`                                                                |
+| Measure | `r params$scheme_name` |
 |-------------------------------------|-----------------------------------|
-| Assumed BAU admissions avoided as CAGR                  | `r scales::percent(values_list$ip_admissions$activity_avoidance_pc, accuracy = 0.01)` |
-| Assumed BAU resultant beddays avoided as CAGR           | `r scales::percent(values_list$ip_beddays$activity_avoidance_pc, accuracy = 0.01)`    |
-| Assumed BAU productivity as CAGR for overall LOS impact | `r scales::percent(bau_productivity_los_cagr, accuracy = 0.01)`                       |
+| Assumed BAU admissions avoided as CAGR | `r scales::percent(values_list$ip_admissions$activity_avoidance_pc, accuracy = 0.01)` |
+| Assumed BAU resultant beddays avoided as CAGR | `r scales::percent(values_list$ip_beddays$activity_avoidance_pc, accuracy = 0.01)` |
+| Assumed BAU productivity as CAGR for overall LOS impact | `r scales::percent(bau_productivity_los_cagr, accuracy = 0.01)` |
 
 ## How many parameter set compared to other participating schemes
 
